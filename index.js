@@ -4,7 +4,6 @@ const bodyParser = require('body-parser');
 const request = require('request');
 const cors = require('cors');
 const WebSocketServer = require('ws').Server;
-const uuid = require('uuid');
 const output_json = require('./data/output-gate-json.json');
 const endpoints = require('./data/endpoints.json')
 
@@ -29,7 +28,7 @@ sock.broadcast = function broadcast(data) {
 
   // sends the message to all users
   sock.clients.forEach(function each(client) {
-    if(client.readyState === 1 ) { // replace true with user identifier? && client.id === data.addressee
+    if(client.readyState === 1 ) {
 
       // send the message/sender to the client
       client.send(JSON.stringify(data));
@@ -40,9 +39,7 @@ sock.broadcast = function broadcast(data) {
 
 // Manage the connection of a new client
 sock.on('connection', function connection(client) {
-  //client.id = uuid.v4();
   console.log("CONNECTION OK...");
-  //console.log(client.id);
 
   // if the client sends a message, direct it to the agent
   client.on('message', function incoming(data) {
