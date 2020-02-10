@@ -1,0 +1,47 @@
+Goal:
+- talk with 2 agents in a chatroom
+
+Done:
+- get access to celio api
+- design UI for single user and 2 bots
+    - three colors, for each
+    - User types a text, both bots respond
+- get nodejs working
+- figure out how to communicate with agents
+    - find the correct topic to send the user message to.
+- create an HTTP method of transmitting data
+- Find server to send user message to
+    - use postman
+
+To-do:
+    - Comment code and ensure JSON objects are correct
+
+Questions:
+    - None
+
+Notes:
+Research Paper - https://pdfs.semanticscholar.org/b0ee/d3f7c5408020e30210d01d4bd7c67d047269.pdf
+doppleganger - http://128.113.21.86:5000/
+cog watch - http://128.113.21.86:7777/
+          - admin, password
+https://internal.cisl.rpi.edu/code/hermam3/agentchat/tree/functional
+https://idaas.iam.ibm.com/idaas/mtfim/sps/authsvc?PolicyId=urn:ibm:security:authentication:asf:basicldapuser
+
+
+Expected JSON Format for sending to Agent:
+{
+  	“sender”: Watson|Celia|User,
+  	“transcript”: I want to buy water,
+  	“addressee”: Celia|Watson|null, 
+    "msgSrc": “chatUI”,
+	"msgType": “submitTranscript”
+}
+
+
+Expected JSON Format for Agent message:
+{
+  	“inReplyTo”: use the currentState variable from input if you are replying to that message,
+  	“sender”: Watson | Celia (case sensitive, use this as global variable so your agent can be quickly changed)
+  	“transcript”: Your text output to be spoken,
+  	“room”: 1001 (preset do not change)
+}

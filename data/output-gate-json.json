@@ -1,0 +1,8 @@
+{
+    "sender": "Human",
+	"addressee": "Celia|Watson",
+	"transcript": "How’s about you sell me 2 eggs and 3 cups of milk for $5",
+	"role": "buyer",
+	"environmentUUID": "abcdefg",
+	"timestamp": "2020-02-05T19:32:41.509Z"
+}

@@ -1,0 +1,77 @@
+/* Base HTML styling */
+html {
+    top: 0px;
+    left: 0px;
+    overflow: hidden;
+    height: 100%;
+}
+body {
+    background-color: grey;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+}
+
+/* Styling group - message space */
+.message-display {
+    background-color: white;
+    width: 75%;
+    height: 88%;
+    overflow: scroll;
+    margin: auto;
+    padding-top: 15px;
+}
+.message-space {
+    width: 90%;
+    margin-top: 20px;
+    margin: auto;
+    min-height: 50px;
+    height: auto;
+    overflow: auto;
+    display: block;
+}
+.message {
+    font-size: 18px;
+    padding: 2px;
+    margin-top: 5px;
+    min-width: 100px;
+    max-width: 500px;
+}
+
+/* user text input styling */
+.user-input-field {
+    font-size: 24px;
+    background-color: rgb(235, 235, 235);
+    width: 75%;
+    max-height: 10%;
+    bottom: 0px;
+    text-decoration: none;
+    outline: none;
+    resize: none;
+    position: absolute;
+    left: 13%;
+}
+
+/* Hardcoded agent1/agent2/user message styling */
+.agent {
+    float: left;
+    clear: left;
+}
+.user {
+    float: right;
+    clear: right;
+    text-align: right;
+}
+.agent-1-name {
+    font-size: 24px;
+    color: blue;
+}
+.agent-2-name {
+    font-size: 24px;
+    color: green;
+}
+.user-name {
+    font-size: 24px;
+    color: red;
+}
