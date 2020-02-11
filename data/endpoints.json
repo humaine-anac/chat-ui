@@ -1,5 +1,7 @@
 {
-    "user_to_output": "http://localhost:3500/relayMessage",
-    "output_to_agent": "http://localhost:5555/receiveMessage",
-    "output_to_user": "http://localhost:2500/receiveMessage"
+    "output": "/relayMessage",
+    "input": "/receiveMessage",
+    "relay_server": "http://localhost:3500",
+    "agent_message": "http://localhost:5555",
+    "chatUI_server": "http://localhost:2500"
 }

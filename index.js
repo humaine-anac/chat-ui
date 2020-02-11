@@ -55,7 +55,7 @@ sock.on('connection', function connection(client) {
     Output: none.
     Effects: send JSON object to agents to be processed.
     */
-    request.post(endpoints.user_to_output, {
+    request.post(endpoints.relay_server + endpoints.output, {
 
       // formatted JSON object
       json: message
@@ -78,7 +78,7 @@ Input: JSON - example found in README.
 Output: JSON - {“msgType” = “submitTranscript”,“Status” = “OK”}, sent to sender
 Effects: display agent message to user
 */
-app.post('/receiveMessage', function(req, res) {
+app.post(endpoints.input, function(req, res) {
   var json_content = req.body;
 
   // Send to broadcast method for displaying in UI
@@ -97,12 +97,12 @@ dummyRoute.listen(3500);
 
 
 // Redirect user/agent messages through dummyRoute and toward destination
-dummyRoute.post('/relayMessage', function(req, res) {
+dummyRoute.post(endpoints.output, function(req, res) {
   var json_content = req.body;
 
   // message from user to agents
   if(json_content.sender === "Human") {
-    request.post(endpoints.output_to_agent, {
+    request.post(endpoints.agent_message + endpoints.input, {
 
       // formatted JSON object
       json: json_content
@@ -118,7 +118,7 @@ dummyRoute.post('/relayMessage', function(req, res) {
 
   // message from agent to user
   } else {
-    request.post(endpoints.output_to_user, {
+    request.post(endpoints.chatUI_server + endpoints.input, {
 
       // formatted JSON object
       json: json_content
