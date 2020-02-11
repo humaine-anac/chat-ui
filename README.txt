@@ -8,6 +8,6 @@ How to start chatUI:
 - run npm install to ensure dependencies are installed
 - start the nodeJS server, index.js
     - node index.js
-- open the index.html page in a browser and refresh
+- open the index.html (http://localhost:2500) page in a browser and refresh
     - the node server should indicate a connection was made
 - endpoints can be edited in the ~/data/endpoints.json file
