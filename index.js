@@ -106,7 +106,7 @@ sock.on('connection', function connection(client) {
       }
 
       // set all other json data
-      message.sender = "Human";
+      message.speaker = "Human";
       message.text = data;
       message.timestamp = Date.now();
 
@@ -161,7 +161,7 @@ dummyRoute.post(endpoints.output, function(req, res) {
   var json_content = req.body;
 
   // message from user to agents
-  if(json_content.sender === "Human") {
+  if(json_content.speaker === "Human") {
     request.post(endpoints.agent_message + endpoints.input, {
 
       // formatted JSON object

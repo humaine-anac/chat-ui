@@ -56,7 +56,7 @@ $(document).ready(function(e) {
         var content = JSON.parse(e.data);
 
         // display agent message
-        new_message(content.text, content.sender);
+        new_message(content.text, content.speaker);
     };
 });
 
