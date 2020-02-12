@@ -99,7 +99,7 @@ sock.on('connection', function connection(client) {
 
       // set all other json data
       message.sender = "Human";
-      message.transcript = data;
+      message.text = data;
       message.timestamp = Date.now();
 
       /*

@@ -1,7 +1,7 @@
 {
     "sender": "Human",
 	"addressee": "null",
-	"transcript": "null",
+	"text": "null",
 	"role": "buyer",
 	"environmentUUID": "abcdefg",
 	"timestamp": "null"
