@@ -1,0 +1,38 @@
+{
+    "roundNumber": 1,
+    "agents": [
+        {
+            "id": "anac-agent-jok1",
+            "name": "Watson",
+            "utilityFunction": {
+                "currencyUnit": "USD",
+                "utility": {
+                    
+                }
+            }
+        },
+        {
+            "id": "anac-agent-jok2",
+            "name": "Celia",
+            "utilityFunction": {
+                "currencyUnit": "USD",
+                "utility": {
+                    
+                }
+            }
+        }
+    ],
+    "human": {
+        "utilityFunction": {
+            "currencyUnit": "USD",
+            "utility": {
+                
+            }
+        }
+    },
+    "durations": {
+        "warmUp": 5,
+        "round": 300,
+        "post": 60
+    }
+}

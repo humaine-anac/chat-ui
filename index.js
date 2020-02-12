@@ -5,7 +5,8 @@ const request = require('request');
 const cors = require('cors');
 const WebSocketServer = require('ws').Server;
 const output_json = require('./data/output-gate-json.json');
-const endpoints = require('./data/endpoints.json')
+const endpoints = require('./data/endpoints.json');
+const sampleRound = require('./data/sample-round.json');
 
 // initialize API and start listening for requests
 var app = express();
@@ -41,33 +42,86 @@ sock.broadcast = function broadcast(data) {
 sock.on('connection', function connection(client) {
   console.log("CONNECTION OK...");
 
-  // if the client sends a message, direct it to the agent
+  // if the client sends a message, or if the round button was clicked
   client.on('message', function incoming(data) {
 
-    var message = output_json;
-    message.sender = "Human";
-    message.transcript = data;
-    message.timestamp = Date.now();
+    // If the start button was clicked
+    if(data === "START_NEW_ROUND") {
 
-    /*
-    Description: HTTP post request to send user message.
-    Input: string - user message being sent.
-    Output: none.
-    Effects: send JSON object to agents to be processed.
-    */
-    request.post(endpoints.relay_server + endpoints.output, {
+      // gather all utility data
+      var new_round = sampleRound;
+      var agent_data, human_data;
 
-      // formatted JSON object
-      json: message
-    
-    // Error handler for POST request
-    }, (error, res) => {
-      if (error) {
-        console.error(error);
-        return;
+      try {
+        agent_data = request.get(endpoints.anac_utility + "/generateUtility/agent");
+        human_data = request.get(endpoints.anac_utility + "/generateUtility/human");
+
+        // set the new functions to the correct json objects
+        new_round.agents[0].utilityFunction = agent_data;
+        new_round.agents[1].utilityFunction = agent_data;
+        new_round.human.utilityFunction = human_data;
+
+        // send /startRound request with new json
+        request.post(endpoints.event_orch + "/startRound", {
+
+          // formatted JSON object
+          json: new_round
+        
+        // Error handler for POST request
+        }, (error, res) => {
+          if (error) {
+            console.error(error);
+            return;
+          }
+          console.log(`statusCode: ${res.statusCode}`);
+        });
+      } catch(error) {
+        console.log("ERROR: anac-utility not responding", error);
       }
-      console.log(`statusCode: ${res.statusCode}`);
-    });
+    
+    // If just a message to the agents, follow here
+    } else {
+
+      // gather format for new message
+      var message = output_json;
+
+      // try and set the agents name, if given
+      const lower_transcript = data.toLowerCase();
+      if (lower_transcript.startsWith('watson') || lower_transcript.startsWith('@watson')) {
+        message.addressee = 'Watson';
+      }
+      else if (lower_transcript.startsWith('celia') || lower_transcript.startsWith('@celia')) {
+        message.addressee = 'Celia';
+      }
+      else {
+        message.addressee = '';
+      }
+
+      // set all other json data
+      message.sender = "Human";
+      message.transcript = data;
+      message.timestamp = Date.now();
+
+      /*
+      Description: HTTP post request to send user message.
+      Input: string - user message being sent.
+      Output: none.
+      Effects: send JSON object to agents to be processed.
+      */
+      request.post(endpoints.relay_server + endpoints.output, {
+
+        // formatted JSON object
+        json: message
+      
+      // Error handler for POST request
+      }, (error, res) => {
+        if (error) {
+          console.error(error);
+          return;
+        }
+        console.log(`statusCode: ${res.statusCode}`);
+      });
+    }
   });
 });
 

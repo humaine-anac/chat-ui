@@ -31,6 +31,12 @@ $(document).ready(function(e) {
         }
     });
 
+    // start round
+    $(".start").on("click", function(eve) {
+        sock.send(data="START_NEW_ROUND");
+        console.log("clicked");
+    });
+
 
     // debug to check if the browser connects to the server properly
     sock.onopen = function(event) {

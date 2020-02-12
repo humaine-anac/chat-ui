@@ -3,5 +3,7 @@
     "input": "/receiveMessage",
     "relay_server": "http://localhost:3500",
     "agent_message": "http://localhost:5555",
-    "chatUI_server": "http://localhost:2500"
+    "chatUI_server": "http://localhost:2500",
+    "anac_utility": "http://localhost:7021",
+    "event_orch": "http://localhost:14010"
 }
