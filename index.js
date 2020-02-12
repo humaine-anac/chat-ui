@@ -141,6 +141,11 @@ Effects: display agent message to user
 app.post(endpoints.input, function(req, res) {
   var json_content = req.body;
 
+  if(json_content.speaker === "Human") {
+    res.send('{“msgType” = “submitTranscript”,“Status” = “OK”}');
+    return;
+  }
+
   // Send to broadcast method for displaying in UI
   sock.broadcast(json_content);
   
