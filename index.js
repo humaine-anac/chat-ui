@@ -128,9 +128,12 @@ sock.on('connection', function connection(client) {
   });
 });
 
+
+// Display index.html on http://localhost:2500/
 app.get('/', function(req, res){
   res.sendFile(path.join(__dirname, 'index.html'));
 });
+
 
 /*
 Description: Send the agent response to be displayed.
@@ -151,6 +154,18 @@ app.post(endpoints.input, function(req, res) {
   
   // send 'ack'
   res.send('{“msgType” = “submitTranscript”,“Status” = “OK”}');
+});
+
+
+// Dummy endpoints for E.O.
+app.post('/receiveRejection', function(req, res) {
+  res.send("{'status': 'Acknowledged'}");
+});
+app.post('/startRound', function(req, res) {
+  res.send("{'status': 'Acknowledged'}");
+});
+app.post('/endRound', function(req, res) {
+  res.send("{'status': 'Acknowledged'}");
 });
 
 
@@ -198,5 +213,6 @@ dummyRoute.post(endpoints.output, function(req, res) {
     });
   }
 
+  // send acknowledgment
   res.send("OK");
 });
