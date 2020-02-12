@@ -4,6 +4,10 @@ const bodyParser = require('body-parser');
 const request = require('request');
 const cors = require('cors');
 const WebSocketServer = require('ws').Server;
+const router = express.Router();
+const path = require('path');
+
+// JSON files
 const output_json = require('./data/output-gate-json.json');
 const endpoints = require('./data/endpoints.json');
 const sampleRound = require('./data/sample-round.json');
@@ -12,7 +16,12 @@ const sampleRound = require('./data/sample-round.json');
 var app = express();
 app.use(cors());
 app.use(bodyParser.json());
-app.listen(2500);
+app.use('/', router);
+app.use(express.static(__dirname));
+app.use(express.static(__dirname + '/styles/stylesheet.css'));
+app.use(express.static(__dirname + '/scripts/functions.js'));
+app.listen(process.env.port || 2500);
+
 
 // Initialize the websocket server
 var sock = new WebSocketServer({ port: 9007 });
@@ -102,12 +111,7 @@ sock.on('connection', function connection(client) {
       message.text = data;
       message.timestamp = Date.now();
 
-      /*
-      Description: HTTP post request to send user message.
-      Input: string - user message being sent.
-      Output: none.
-      Effects: send JSON object to agents to be processed.
-      */
+      // HTTP post request to send user message.
       request.post(endpoints.relay_server + endpoints.output, {
 
         // formatted JSON object
@@ -125,6 +129,9 @@ sock.on('connection', function connection(client) {
   });
 });
 
+app.get('/', function(req, res){
+  res.sendFile(path.join(__dirname+'/index.html'));
+});
 
 /*
 Description: Send the agent response to be displayed.
