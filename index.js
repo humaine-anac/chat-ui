@@ -22,7 +22,6 @@ app.use(express.static(__dirname + '/styles/stylesheet.css'));
 app.use(express.static(__dirname + '/scripts/functions.js'));
 app.listen(process.env.port || 2500);
 
-
 // Initialize the websocket server
 var sock = new WebSocketServer({ port: 9007 });
 

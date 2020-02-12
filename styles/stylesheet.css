@@ -78,5 +78,8 @@ body {
 
 /* Button used to start a new round*/
 .start {
-    
+    height: 5%;
+    position: absolute;
+    left: 1%;
+    bottom: 1%;
 }
