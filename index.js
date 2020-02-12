@@ -111,7 +111,7 @@ sock.on('connection', function connection(client) {
       message.timestamp = Date.now();
 
       // HTTP post request to send user message.
-      request.post(endpoints.relay_server + endpoints.output, {
+      request.post(endpoints.env_orch + endpoints.output, {
 
         // formatted JSON object
         json: message
