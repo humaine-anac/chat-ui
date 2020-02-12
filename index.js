@@ -70,7 +70,7 @@ sock.on('connection', function connection(client) {
         new_round.human.utilityFunction = human_data;
 
         // send /startRound request with new json
-        request.post(endpoints.event_orch + "/startRound", {
+        request.post(endpoints.env_orch + "/startRound", {
 
           // formatted JSON object
           json: new_round
