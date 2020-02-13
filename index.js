@@ -6,6 +6,7 @@ const cors = require('cors');
 const WebSocketServer = require('ws').Server;
 const router = express.Router();
 const path = require('path');
+const ip = require('ip');
 
 // JSON files
 const output_json = require('./data/output-gate-json.json');
@@ -23,7 +24,7 @@ app.use(express.static(__dirname + '/scripts/functions.js'));
 app.listen(process.env.port || 2500);
 
 // Initialize the websocket server
-var sock = new WebSocketServer({ port: 9007 });
+var sock = new WebSocketServer({ port: 80 });
 
 
 /*
@@ -66,7 +67,9 @@ sock.on('connection', function connection(client) {
 
         // set the new functions to the correct json objects
         new_round.agents[0].utilityFunction = agent_data;
+        new_round.agents[0].id = "http://" + ip.address() + ":2500";
         new_round.agents[1].utilityFunction = agent_data;
+        new_round.agents[1].id = "http://" + ip.address() + ":2500";
         new_round.human.utilityFunction = human_data;
 
         // send /startRound request with new json
