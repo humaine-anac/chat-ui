@@ -2,7 +2,8 @@
     "roundNumber": 1,
     "agents": [
         {
-            "id": "anac-agent-jok1",
+            "host": "",
+            "port": "",
             "name": "Watson",
             "utilityFunction": {
                 "currencyUnit": "USD",
@@ -12,7 +13,8 @@
             }
         },
         {
-            "id": "anac-agent-jok2",
+            "host": "",
+            "port": "",
             "name": "Celia",
             "utilityFunction": {
                 "currencyUnit": "USD",

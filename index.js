@@ -26,7 +26,6 @@ app.listen(process.env.port || 2500);
 // Initialize the websocket server
 var sock = new WebSocketServer({ port: 80 });
 
-
 /*
 Description: Reply to the user with the agents response.
 Input: string - agent response JSON
@@ -67,10 +66,14 @@ sock.on('connection', function connection(client) {
 
         // set the new functions to the correct json objects
         new_round.agents[0].utilityFunction = agent_data;
-        new_round.agents[0].id = "http://" + ip.address() + ":2500";
+        new_round.agents[0].host = "http://" + ip.address();
+        new_round.agents[0].port = "2500";
         new_round.agents[1].utilityFunction = agent_data;
-        new_round.agents[1].id = "http://" + ip.address() + ":2500";
+        new_round.agents[0].host = "http://" + ip.address();
+        new_round.agents[0].port = "2500";
         new_round.human.utilityFunction = human_data;
+
+        console.log(new_round);
 
         // send /startRound request with new json
         request.post(endpoints.env_orch + "/startRound", {
