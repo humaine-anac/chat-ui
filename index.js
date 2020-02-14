@@ -78,7 +78,7 @@ sock.on('connection', function connection(client) {
           new_round.agents[1].host = endpoints.watson.host;
           new_round.agents[1].port = endpoints.watson.port;
 
-          request.get(endpoints.anac_utility + "/generateUtility/human", (error, res) => {
+          request.get(endpoints.anac_utility + "/generateUtility/human", (error, res, body) => {
             
             human_data = JSON.parse(body);
             console.log(human_data);
