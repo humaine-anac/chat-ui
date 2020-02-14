@@ -6,7 +6,6 @@ const cors = require('cors');
 const WebSocketServer = require('ws').Server;
 const router = express.Router();
 const path = require('path');
-const ip = require('ip');
 
 // JSON files
 const output_json = require('./data/output-gate-json.json');
@@ -61,36 +60,45 @@ sock.on('connection', function connection(client) {
       var agent_data, human_data;
 
       try {
-        agent_data = request.get(endpoints.anac_utility + "/generateUtility/agent");
-        human_data = request.get(endpoints.anac_utility + "/generateUtility/human");
+        // Try to get the utility data from the utility generator
+        request.get(endpoints.anac_utility + "/generateUtility/agent", (res) => {
+          agent_data = res;
 
-        // set the new functions to the correct json objects
-        new_round.agents[0].utilityFunction = agent_data;
-        new_round.agents[0].protocol = endpoints.celia.protocol;
-        new_round.agents[0].host = endpoints.celia.host;
-        new_round.agents[0].port = endpoints.celia.port;
-        new_round.agents[1].utilityFunction = agent_data;
-        new_round.agents[1].protocol = endpoints.watson.protocol;
-        new_round.agents[1].host = endpoints.watson.host;
-        new_round.agents[1].port = endpoints.watson.port;
-        new_round.human.utilityFunction = human_data;
+          // Set Celia's round information
+          new_round.agents[0].utilityFunction = agent_data;
+          new_round.agents[0].protocol = endpoints.celia.protocol;
+          new_round.agents[0].host = endpoints.celia.host;
+          new_round.agents[0].port = endpoints.celia.port;
 
-        console.log(new_round);
+          // Set Watson's round information
+          new_round.agents[1].utilityFunction = agent_data;
+          new_round.agents[1].protocol = endpoints.watson.protocol;
+          new_round.agents[1].host = endpoints.watson.host;
+          new_round.agents[1].port = endpoints.watson.port;
 
-        // send /startRound request with new json
-        request.post(endpoints.env_orch + "/startRound", {
+          request.get(endpoints.anac_utility + "/generateUtility/human", (res) => {
+            human_data = res;
 
-          // formatted JSON object
-          json: new_round
-        
-        // Error handler for POST request
-        }, (error, res) => {
-          if (error) {
-            console.error(error);
-            return;
-          }
-          console.log(`statusCode: ${res.statusCode}`);
+            // Set the Human's round information
+            new_round.human.utilityFunction = human_data;
+
+            // send /startRound request with new json
+            request.post(endpoints.env_orch + "/startRound", {
+
+              // formatted JSON object
+              json: new_round
+            
+            // Error handler for POST request
+            }, (error, res) => {
+              if (error) {
+                console.error(error);
+                return;
+              }
+              console.log(`statusCode: ${res.statusCode}`);
+            });
+          });
         });
+        
       } catch(error) {
         console.log("ERROR: anac-utility not responding", error);
       }
