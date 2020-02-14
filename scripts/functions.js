@@ -5,7 +5,7 @@ const a2 = "Watson"
 $(document).ready(function(e) {
     
     // client side server to connect to NodeJS server
-    var sock = new WebSocket("ws://" + location.hostname + ":80/");
+    var sock = new WebSocket("ws://" + location.hostname + ":2501/");
 
     // Listen for the 'enter' key to be pressed, then process
     // the users input
