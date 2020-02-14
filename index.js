@@ -61,7 +61,8 @@ sock.on('connection', function connection(client) {
 
       try {
         // Try to get the utility data from the utility generator
-        request.get(endpoints.anac_utility + "/generateUtility/agent", (res) => {
+        request.get(endpoints.anac_utility + "/generateUtility/agent", (error, res) => {
+          console.log(res);
           agent_data = res;
 
           // Set Celia's round information
@@ -76,7 +77,8 @@ sock.on('connection', function connection(client) {
           new_round.agents[1].host = endpoints.watson.host;
           new_round.agents[1].port = endpoints.watson.port;
 
-          request.get(endpoints.anac_utility + "/generateUtility/human", (res) => {
+          request.get(endpoints.anac_utility + "/generateUtility/human", (error, res) => {
+            console.log(res);
             human_data = res;
 
             // Set the Human's round information
