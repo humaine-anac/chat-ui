@@ -2,6 +2,7 @@
     "roundNumber": 1,
     "agents": [
         {
+            "protocol": "",
             "host": "",
             "port": "",
             "name": "Watson",
@@ -13,6 +14,7 @@
             }
         },
         {
+            "protocol": "",
             "host": "",
             "port": "",
             "name": "Celia",

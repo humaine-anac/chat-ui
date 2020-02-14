@@ -66,11 +66,13 @@ sock.on('connection', function connection(client) {
 
         // set the new functions to the correct json objects
         new_round.agents[0].utilityFunction = agent_data;
-        new_round.agents[0].host = "http://" + ip.address();
-        new_round.agents[0].port = "2500";
+        new_round.agents[0].protocol = endpoints.celia.protocol;
+        new_round.agents[0].host = endpoints.celia.host;
+        new_round.agents[0].port = endpoints.celia.port;
         new_round.agents[1].utilityFunction = agent_data;
-        new_round.agents[0].host = "http://" + ip.address();
-        new_round.agents[0].port = "2500";
+        new_round.agents[1].protocol = endpoints.watson.protocol;
+        new_round.agents[1].host = endpoints.watson.host;
+        new_round.agents[1].port = endpoints.watson.port;
         new_round.human.utilityFunction = human_data;
 
         console.log(new_round);
