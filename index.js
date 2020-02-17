@@ -162,7 +162,8 @@ app.post(endpoints.input, function(req, res) {
   var json_content = req.body;
 
   if(json_content.speaker === "Human") {
-    res.send('{“msgType” = “submitTranscript”,“Status” = “OK”}');
+    var json = {msgType: 'submitTranscript', Status: 'OK'};
+    res.send(json);
     return;
   }
 
@@ -170,7 +171,8 @@ app.post(endpoints.input, function(req, res) {
   sock.broadcast(json_content);
   
   // send 'ack'
-  res.send('{“msgType” = “submitTranscript”,“Status” = “OK”}');
+  var json = {msgType: 'submitTranscript', Status: 'OK'};
+  res.send(json);
 });
 
 
@@ -189,42 +191,45 @@ app.post("/receiveRoundTotals", function(req, res) {
   var humanUtility = json_content.roundTotals.Human;
 
   // send a post request to anac-utility for results
-  request.post(endpoints.env_orch + '/calculateUtility/agent', { json: celiaUtility }, (error, res, body) => {
+  request.get(endpoints.env_orch + '/calculateUtility/agent', { json: celiaUtility }, (error, res, body) => {
 
     // send data to front-end
     var message = {roundTotal: true, id: "Celia", data: body};
-    sock.broadcast(JSON.stringify(message));
+    sock.broadcast(message);
   });
 
   // send a post request to anac-utility for results
-  request.post(endpoints.env_orch + '/calculateUtility/agent', { json: watsonUtility }, (error, res, body) => {
+  request.get(endpoints.env_orch + '/calculateUtility/agent', { json: watsonUtility }, (error, res, body) => {
 
     // send data to front-end
     var message = {roundTotal: true, id: "Watson", data: body};
-    sock.broadcast(JSON.stringify(message));
+    sock.broadcast(message);
   });
 
   // send a post request to anac-utility for results
-  request.post(endpoints.env_orch + '/calculateUtility/human', { json: humanUtility }, (error, res, body) => {
+  request.get(endpoints.env_orch + '/calculateUtility/human', { json: humanUtility }, (error, res, body) => {
 
     // send data to front-end
     var message = {roundTotal: true, id: "Human", data: body};
-    sock.broadcast(JSON.stringify(message));
+    sock.broadcast(message);
   });
-
-  res.send('{“Status” = “OK”}');
+  var json = {Status: 'OK'};
+  res.send(json);
 });
 
 
 // Dummy endpoints for E.O.
 app.post('/receiveRejection', function(req, res) {
-  res.send("{'status': 'Acknowledged'}");
+  var json = {status: 'Acknowledged'};
+  res.send(json);
 });
 app.post('/startRound', function(req, res) {
-  res.send("{'status': 'Acknowledged'}");
+  var json = {status: 'Acknowledged'};
+  res.send(json);
 });
 app.post('/endRound', function(req, res) {
-  res.send("{'status': 'Acknowledged'}");
+  var json = {status: 'Acknowledged'};
+  res.send(json);
 });
 
 
@@ -273,5 +278,6 @@ dummyRoute.post(endpoints.output, function(req, res) {
   }
 
   // send acknowledgment
-  res.send("OK");
+  var json = {Status: 'OK'};
+  res.send(json);
 });

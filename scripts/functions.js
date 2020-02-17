@@ -61,11 +61,10 @@ $(document).ready(function(e) {
     // method to parse and display a message from the agent
     sock.onmessage = function(e) {
         var content = JSON.parse(e.data);
-
+        
         // if data contains round results
-        if(content.roundTotal == true) {
-            console.log("Received round ending totals");
-            $("#" + content.id).style.innerHTML += JSON.stringify(content.data);
+        if(content.data !== undefined) {
+            $("#" + content.id)[0].innerHTML += JSON.stringify(content.data);
             $(".popup")[0].style.display = "block";
 
         // if data contains message
