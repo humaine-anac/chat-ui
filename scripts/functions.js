@@ -34,7 +34,15 @@ $(document).ready(function(e) {
     // start round
     $(".start").on("click", function(eve) {
         sock.send(data="START_NEW_ROUND");
-        console.log("clicked");
+    });
+
+
+    $(".display_popup").on("click", function(eve) {
+        if($(".popup")[0].style.display === "block") {
+            $(".popup")[0].style.display = "none";
+        } else {
+            $(".popup")[0].style.display = "block";
+        }
     });
 
 
@@ -52,11 +60,19 @@ $(document).ready(function(e) {
 
     // method to parse and display a message from the agent
     sock.onmessage = function(e) {
-        console.log(e);
         var content = JSON.parse(e.data);
 
-        // display agent message
-        new_message(content.text, content.speaker);
+        // if data contains round results
+        if(content.roundTotal == true) {
+            console.log("Received round ending totals");
+            $("#" + content.id).style.innerHTML += JSON.stringify(content.data);
+            $(".popup")[0].style.display = "block";
+
+        // if data contains message
+        } else {
+            // display agent message
+            new_message(content.text, content.speaker);
+        }
     };
 });
 

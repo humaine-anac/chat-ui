@@ -6,6 +6,7 @@ html {
     height: 100%;
 }
 body {
+    z-index: 1;
     background-color: grey;
     height: 100%;
     width: 100%;
@@ -30,6 +31,7 @@ body {
     height: auto;
     overflow: auto;
     display: block;
+    margin-bottom: 40px;
 }
 .message {
     font-size: 18px;
@@ -82,4 +84,23 @@ body {
     position: absolute;
     left: 1%;
     bottom: 1%;
+}
+
+/* Popup window styles */
+.popup {
+    z-index: 2;
+    background: lightgrey;
+    display: none;
+    position: absolute;
+    width: 50%;
+    margin: auto;
+    left: 25%;
+    top: 8px;
+    border: darkgrey solid 1px;
+}
+.display_popup {
+    height: 5%;
+    position: absolute;
+    left: 1%;
+    bottom: 7%;
 }

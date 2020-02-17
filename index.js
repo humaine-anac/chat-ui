@@ -21,6 +21,7 @@ app.use(express.static(__dirname));
 app.use(express.static(__dirname + '/styles/stylesheet.css'));
 app.use(express.static(__dirname + '/scripts/functions.js'));
 app.listen(process.env.port || 2500);
+console.log("Express server listening on port 2500");
 
 // Initialize the websocket server
 var sock = new WebSocketServer({ port: 2501 });
@@ -59,53 +60,49 @@ sock.on('connection', function connection(client) {
       var new_round = sampleRound;
       var agent_data, human_data;
 
-      try {
-        // Try to get the utility data from the utility generator
-        request.get(endpoints.anac_utility + "/generateUtility/agent", (error, res, body) => {
+      // Get the agent utility data from the utility generator
+      request.get(endpoints.anac_utility + "/generateUtility/agent", (error, res, body) => {
+        
+        // Parse the string data into a JSON object
+        agent_data = JSON.parse(body);
+
+        // Set Celia's round information
+        new_round.agents[0].utilityFunction = agent_data;
+        new_round.agents[0].protocol = endpoints.celia.protocol;
+        new_round.agents[0].host = endpoints.celia.host;
+        new_round.agents[0].port = endpoints.celia.port;
+
+        // Set Watson's round information
+        new_round.agents[1].utilityFunction = agent_data;
+        new_round.agents[1].protocol = endpoints.watson.protocol;
+        new_round.agents[1].host = endpoints.watson.host;
+        new_round.agents[1].port = endpoints.watson.port;
+
+        // Get the human utility data
+        request.get(endpoints.anac_utility + "/generateUtility/human", (error, res, body) => {
           
-          agent_data = JSON.parse(body);
-          console.log(agent_data);
+          // Parse the string data into a JSON object
+          human_data = JSON.parse(body);
 
-          // Set Celia's round information
-          new_round.agents[0].utilityFunction = agent_data;
-          new_round.agents[0].protocol = endpoints.celia.protocol;
-          new_round.agents[0].host = endpoints.celia.host;
-          new_round.agents[0].port = endpoints.celia.port;
+          // Set the Human's round information
+          new_round.human.utilityFunction = human_data;
 
-          // Set Watson's round information
-          new_round.agents[1].utilityFunction = agent_data;
-          new_round.agents[1].protocol = endpoints.watson.protocol;
-          new_round.agents[1].host = endpoints.watson.host;
-          new_round.agents[1].port = endpoints.watson.port;
+          // send /startRound request with new json
+          request.post(endpoints.env_orch + "/startRound", {
 
-          request.get(endpoints.anac_utility + "/generateUtility/human", (error, res, body) => {
-            
-            human_data = JSON.parse(body);
-            console.log(human_data);
-
-            // Set the Human's round information
-            new_round.human.utilityFunction = human_data;
-
-            // send /startRound request with new json
-            request.post(endpoints.env_orch + "/startRound", {
-
-              // formatted JSON object
-              json: new_round
-            
-            // Error handler for POST request
-            }, (error, res) => {
-              if (error) {
-                console.error(error);
-                return;
-              }
-              console.log(`statusCode: ${res.statusCode}`);
-            });
+            // formatted JSON object
+            json: new_round
+          
+          // Error handler for POST request
+          }, (error, res) => {
+            if (error) {
+              console.error(error);
+              return;
+            }
+            console.log(`statusCode: ${res.statusCode}`);
           });
         });
-        
-      } catch(error) {
-        console.log("ERROR: anac-utility not responding", error);
-      }
+      });
     
     // If just a message to the agents, follow here
     } else {
@@ -174,6 +171,48 @@ app.post(endpoints.input, function(req, res) {
   
   // send 'ack'
   res.send('{“msgType” = “submitTranscript”,“Status” = “OK”}');
+});
+
+
+/*
+Description: Display results of the round.
+Input: JSON object
+Output: JSON - {“msgType” = “submitTranscript”,“Status” = “OK”}, sent to sender
+Effects: display round results to user
+*/
+app.post("/receiveRoundTotals", function(req, res) {
+
+  // collect and organize JSON data into separate variables
+  var json_content = req.body;
+  var celiaUtility = json_content.roundTotals.Celia;
+  var watsonUtility = json_content.roundTotals.Watson;
+  var humanUtility = json_content.roundTotals.Human;
+
+  // send a post request to anac-utility for results
+  request.post(endpoints.env_orch + '/calculateUtility/agent', { json: celiaUtility }, (error, res, body) => {
+
+    // send data to front-end
+    var message = {roundTotal: true, id: "Celia", data: body};
+    sock.broadcast(JSON.stringify(message));
+  });
+
+  // send a post request to anac-utility for results
+  request.post(endpoints.env_orch + '/calculateUtility/agent', { json: watsonUtility }, (error, res, body) => {
+
+    // send data to front-end
+    var message = {roundTotal: true, id: "Watson", data: body};
+    sock.broadcast(JSON.stringify(message));
+  });
+
+  // send a post request to anac-utility for results
+  request.post(endpoints.env_orch + '/calculateUtility/human', { json: humanUtility }, (error, res, body) => {
+
+    // send data to front-end
+    var message = {roundTotal: true, id: "Human", data: body};
+    sock.broadcast(JSON.stringify(message));
+  });
+
+  res.send('{“Status” = “OK”}');
 });
 
 
