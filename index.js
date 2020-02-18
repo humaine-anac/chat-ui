@@ -255,6 +255,21 @@ app.post("/receiveRoundTotals", function(req, res) {
   // send a post request to anac-utility for results
   request.get(endpoints.env_orch + '/calculateUtility/human', { json: humanUtility }, (error, res, body) => {
 
+    // Send human data to environment orchestrator
+    request.post(endpoints.env_orch + "/receiveHumanAllocation", {
+
+      // formatted JSON object
+      json: body.breakdown
+    
+    // Error handler for POST request
+    }, (error, res) => {
+      if (error) {
+        console.error(error);
+        return;
+      }
+      console.log(`statusCode: ${res.statusCode}`);
+    });
+
     // send data to front-end
     var message = {roundTotal: true, newRound: false, id: "Human", data: body};
     sock.broadcast(message);
