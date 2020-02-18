@@ -1,6 +1,7 @@
 // Global Variables
-const a1 = "Celia"
-const a2 = "Watson"
+const a1 = "Celia";
+const a2 = "Watson";
+var written = 0;
 
 $(document).ready(function(e) {
     
@@ -36,7 +37,7 @@ $(document).ready(function(e) {
         sock.send(data="START_NEW_ROUND");
     });
 
-
+    // if the display_popup button is pressed, show or remove div depending on state
     $(".display_popup").on("click", function(eve) {
         if($(".popup")[0].style.display === "block") {
             $(".popup")[0].style.display = "none";
@@ -61,11 +62,44 @@ $(document).ready(function(e) {
     // method to parse and display a message from the agent
     sock.onmessage = function(e) {
         var content = JSON.parse(e.data);
-        
+
         // if data contains round results
-        if(content.data !== undefined) {
-            $("#" + content.id)[0].innerHTML += JSON.stringify(content.data);
-            $(".popup")[0].style.display = "block";
+        if(content.roundTotal == true) {
+
+            // if this is a new round, overwrite old data
+            if(content.newRound == true) {
+                written = 0;
+                $("#Celia")[0].textContent = "Celia:";
+                $("#Watson")[0].textContent = "Watson:";
+                $("#Human")[0].textContent = "Human:";
+                $(".popup")[0].style.display = "none";
+            
+            // if not a new round and all data hasn't been displayed
+            } else if(written < 3){
+                written += 1;
+
+                // display monetary value and unit
+                $("#" + content.id)[0].textContent += content.data.value + " " + content.data.currencyUnit;
+
+                // if human data, display breakdown of goods
+                if(content.id === "Human") {
+                    $("#" + content.id)[0].setAttribute('style', 'white-space: pre;');
+                    $("#" + content.id)[0].textContent += "\nBreakdown:";
+
+                    // for each product show all goods gained
+                    for(key in content.data.breakdown) {
+                        $("#" + content.id)[0].textContent += "\n\t" + key;
+                        $("#" + content.id)[0].textContent += " (" + content.data.breakdown[key].quantity + "):";
+                        for(key2 in content.data.breakdown[key].supplement) {
+                            $("#" + content.id)[0].textContent += " " + content.data.breakdown[key].supplement[key2].good
+                            + " (" + content.data.breakdown[key].supplement[key2].quantity + ") ";
+                        };
+                    };
+                }
+
+                // display div
+                $(".popup")[0].style.display = "block";
+            }
 
         // if data contains message
         } else {

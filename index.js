@@ -60,6 +60,9 @@ sock.on('connection', function connection(client) {
       var new_round = sampleRound;
       var agent_data, human_data;
 
+      var message = {roundTotal: true, newRound: true};
+      sock.broadcast(message);
+
       // Get the agent utility data from the utility generator
       request.get(endpoints.anac_utility + "/generateUtility/agent", (error, res, body) => {
         
@@ -184,17 +187,60 @@ Effects: display round results to user
 */
 app.post("/receiveRoundTotals", function(req, res) {
 
+  console.log("received round total");
+  console.log(req.body);
+
   // collect and organize JSON data into separate variables
   var json_content = req.body;
+
+  // Grab celias utility, if not found then fill with empty values
   var celiaUtility = json_content.roundTotals.Celia;
+  if(celiaUtility == undefined) {
+    console.log("found null celia");
+    celiaUtility = {
+      "quantity": {},
+      "revenue": 0.0,
+      "utility": {
+        "currencyUnit": "USD",
+        "value": 0.0
+      }
+    }
+  }
+
+  // Grab watsons utility, if not found then fill with empty values
   var watsonUtility = json_content.roundTotals.Watson;
+  if(watsonUtility == undefined) {
+    console.log("found null watson");
+    watsonUtility = {
+      "quantity": {},
+      "revenue": 0.0,
+      "utility": {
+        "currencyUnit": "USD",
+        "value": 0.0
+      }
+    }
+  }
+
+  // Grab the human utility, if not found then fill with empty values
   var humanUtility = json_content.roundTotals.Human;
+  if(humanUtility == undefined) {
+    console.log("found null watson");
+    humanUtility = {
+      "quantity": {},
+      "cost": 0.0,
+      "utility": {
+        "currencyUnit": "USD",
+        "value": 0,
+        "breakdown": {}
+      }
+    }
+  }
 
   // send a post request to anac-utility for results
   request.get(endpoints.env_orch + '/calculateUtility/agent', { json: celiaUtility }, (error, res, body) => {
 
     // send data to front-end
-    var message = {roundTotal: true, id: "Celia", data: body};
+    var message = {roundTotal: true, newRound: false, id: "Celia", data: body};
     sock.broadcast(message);
   });
 
@@ -202,7 +248,7 @@ app.post("/receiveRoundTotals", function(req, res) {
   request.get(endpoints.env_orch + '/calculateUtility/agent', { json: watsonUtility }, (error, res, body) => {
 
     // send data to front-end
-    var message = {roundTotal: true, id: "Watson", data: body};
+    var message = {roundTotal: true, newRound: false, id: "Watson", data: body};
     sock.broadcast(message);
   });
 
@@ -210,7 +256,7 @@ app.post("/receiveRoundTotals", function(req, res) {
   request.get(endpoints.env_orch + '/calculateUtility/human', { json: humanUtility }, (error, res, body) => {
 
     // send data to front-end
-    var message = {roundTotal: true, id: "Human", data: body};
+    var message = {roundTotal: true, newRound: false, id: "Human", data: body};
     sock.broadcast(message);
   });
   var json = {Status: 'OK'};
