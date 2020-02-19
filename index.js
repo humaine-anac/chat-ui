@@ -58,51 +58,56 @@ sock.on('connection', function connection(client) {
 
       // gather all utility data
       var new_round = sampleRound;
-      var agent_data, human_data;
+      var celia_data, watson_data, human_data;
 
       var message = {roundTotal: true, newRound: true};
       sock.broadcast(message);
 
-      // Get the agent utility data from the utility generator
       request.get(endpoints.anac_utility + "/generateUtility/agent", (error, res, body) => {
-        
-        // Parse the string data into a JSON object
-        agent_data = JSON.parse(body);
+
+        celia_data = JSON.parse(body);
 
         // Set Celia's round information
-        new_round.agents[0].utilityFunction = agent_data;
+        new_round.agents[0].utilityFunction = celia_data;
         new_round.agents[0].protocol = endpoints.celia.protocol;
         new_round.agents[0].host = endpoints.celia.host;
         new_round.agents[0].port = endpoints.celia.port;
 
-        // Set Watson's round information
-        new_round.agents[1].utilityFunction = agent_data;
-        new_round.agents[1].protocol = endpoints.watson.protocol;
-        new_round.agents[1].host = endpoints.watson.host;
-        new_round.agents[1].port = endpoints.watson.port;
-
-        // Get the human utility data
-        request.get(endpoints.anac_utility + "/generateUtility/human", (error, res, body) => {
+        // Get the agent utility data from the utility generator
+        request.get(endpoints.anac_utility + "/generateUtility/agent", (error, res, body) => {
           
           // Parse the string data into a JSON object
-          human_data = JSON.parse(body);
+          watson_data = JSON.parse(body);
 
-          // Set the Human's round information
-          new_round.human.utilityFunction = human_data;
+          // Set Watson's round information
+          new_round.agents[1].utilityFunction = watson_data;
+          new_round.agents[1].protocol = endpoints.watson.protocol;
+          new_round.agents[1].host = endpoints.watson.host;
+          new_round.agents[1].port = endpoints.watson.port;
 
-          // send /startRound request with new json
-          request.post(endpoints.env_orch + "/startRound", {
+          // Get the human utility data
+          request.get(endpoints.anac_utility + "/generateUtility/human", (error, res, body) => {
+            
+            // Parse the string data into a JSON object
+            human_data = JSON.parse(body);
 
-            // formatted JSON object
-            json: new_round
-          
-          // Error handler for POST request
-          }, (error, res) => {
-            if (error) {
-              console.error(error);
-              return;
-            }
-            console.log(`statusCode: ${res.statusCode}`);
+            // Set the Human's round information
+            new_round.human.utilityFunction = human_data;
+
+            // send /startRound request with new json
+            request.post(endpoints.env_orch + "/startRound", {
+
+              // formatted JSON object
+              json: new_round
+            
+            // Error handler for POST request
+            }, (error, res) => {
+              if (error) {
+                console.error(error);
+                return;
+              }
+              console.log(`statusCode: ${res.statusCode}`);
+            });
           });
         });
       });
@@ -193,87 +198,21 @@ app.post("/receiveRoundTotals", function(req, res) {
   // collect and organize JSON data into separate variables
   var json_content = req.body;
 
-  // Grab celias utility, if not found then fill with empty values
+  // Grab celias utility
   var celiaUtility = json_content.roundTotals.Celia;
-  if(celiaUtility == undefined) {
-    console.log("found null celia");
-    celiaUtility = {
-      "quantity": {},
-      "revenue": 0.0,
-      "utility": {
-        "currencyUnit": "USD",
-        "value": 0.0
-      }
-    }
-  }
+  var message = {roundTotal: true, newRound: false, id: "Celia", data: celiaUtility};
+  sock.broadcast(message);
 
-  // Grab watsons utility, if not found then fill with empty values
+  // Grab watsons utility
   var watsonUtility = json_content.roundTotals.Watson;
-  if(watsonUtility == undefined) {
-    console.log("found null watson");
-    watsonUtility = {
-      "quantity": {},
-      "revenue": 0.0,
-      "utility": {
-        "currencyUnit": "USD",
-        "value": 0.0
-      }
-    }
-  }
+  var message = {roundTotal: true, newRound: false, id: "Watson", data: watsonUtility};
+  sock.broadcast(message);
 
-  // Grab the human utility, if not found then fill with empty values
+  // Grab the human utility
   var humanUtility = json_content.roundTotals.Human;
-  if(humanUtility == undefined) {
-    console.log("found null watson");
-    humanUtility = {
-      "quantity": {},
-      "cost": 0.0,
-      "utility": {
-        "currencyUnit": "USD",
-        "value": 0,
-        "breakdown": {}
-      }
-    }
-  }
+  var message = {roundTotal: true, newRound: false, id: "Human", data: humanUtility};
+  sock.broadcast(message);
 
-  // send a post request to anac-utility for results
-  request.get(endpoints.env_orch + '/calculateUtility/agent', { json: celiaUtility }, (error, res, body) => {
-
-    // send data to front-end
-    var message = {roundTotal: true, newRound: false, id: "Celia", data: body};
-    sock.broadcast(message);
-  });
-
-  // send a post request to anac-utility for results
-  request.get(endpoints.env_orch + '/calculateUtility/agent', { json: watsonUtility }, (error, res, body) => {
-
-    // send data to front-end
-    var message = {roundTotal: true, newRound: false, id: "Watson", data: body};
-    sock.broadcast(message);
-  });
-
-  // send a post request to anac-utility for results
-  request.get(endpoints.env_orch + '/calculateUtility/human', { json: humanUtility }, (error, res, body) => {
-
-    // Send human data to environment orchestrator
-    request.post(endpoints.env_orch + "/receiveHumanAllocation", {
-
-      // formatted JSON object
-      json: body.breakdown
-    
-    // Error handler for POST request
-    }, (error, res) => {
-      if (error) {
-        console.error(error);
-        return;
-      }
-      console.log(`statusCode: ${res.statusCode}`);
-    });
-
-    // send data to front-end
-    var message = {roundTotal: true, newRound: false, id: "Human", data: body};
-    sock.broadcast(message);
-  });
   var json = {Status: 'OK'};
   res.send(json);
 });

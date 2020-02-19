@@ -63,41 +63,43 @@ $(document).ready(function(e) {
     sock.onmessage = function(e) {
         var content = JSON.parse(e.data);
 
+        console.log(content);
+
         // if data contains round results
         if(content.roundTotal == true) {
 
             // if this is a new round, overwrite old data
             if(content.newRound == true) {
                 written = 0;
-                $("#Celia")[0].textContent = "Celia:";
-                $("#Watson")[0].textContent = "Watson:";
-                $("#Human")[0].textContent = "Human:";
+                $("#Celia")[0].textContent = "Celia: ";
+                $("#Watson")[0].textContent = "Watson: ";
+                $("#Human")[0].textContent = "Human: ";
                 $(".popup")[0].style.display = "none";
             
             // if not a new round and all data hasn't been displayed
-            } else if(written < 3){
+            } else if(written < 3 && content.data !== undefined){
                 written += 1;
 
-                // display monetary value and unit
-                $("#" + content.id)[0].textContent += content.data.value + " " + content.data.currencyUnit;
+                // display value and unit
+                $("#" + content.id)[0].textContent += content.data.utility.value + " " + content.data.utility.currencyUnit;
 
-                // if human data, display breakdown of goods
+                // if human data, show cost, else revenue
                 if(content.id === "Human") {
-                    $("#" + content.id)[0].setAttribute('style', 'white-space: pre;');
-                    $("#" + content.id)[0].textContent += "\nBreakdown:";
-
-                    // for each product show all goods gained
-                    for(key in content.data.breakdown) {
-                        $("#" + content.id)[0].textContent += "\n\t" + key;
-                        $("#" + content.id)[0].textContent += " (" + content.data.breakdown[key].quantity + "):";
-                        for(key2 in content.data.breakdown[key].supplement) {
-                            $("#" + content.id)[0].textContent += " " + content.data.breakdown[key].supplement[key2].good
-                            + " (" + content.data.breakdown[key].supplement[key2].quantity + ") ";
-                        };
-                    };
+                    $("#" + content.id)[0].textContent += "\n\tCost: " + content.data.cost;
+                } else {
+                    $("#" + content.id)[0].textContent += "\n\tRevenue: " + content.data.revenue;
                 }
 
+                $("#" + content.id)[0].textContent += "\n\tQuantity:";
+
+                // show quantity of each good
+                for(key in content.data.quantity) {
+                    $("#" + content.id)[0].textContent += " " + key;
+                    $("#" + content.id)[0].textContent += " (" + content.data.quantity[key] + ")";
+                };
+
                 // display div
+                $("#" + content.id)[0].textContent += "\n ";
                 $(".popup")[0].style.display = "block";
             }
 

@@ -98,6 +98,11 @@ body {
     top: 8px;
     border: darkgrey solid 1px;
 }
+.popup-item {
+    white-space: pre-wrap;
+    overflow-wrap: normal;
+    width: 100%;
+}
 .display_popup {
     height: 5%;
     position: absolute;

@@ -36,7 +36,7 @@
     },
     "durations": {
         "warmUp": 5,
-        "round": 300,
-        "post": 60
+        "round": 45,
+        "post": 5
     }
 }
