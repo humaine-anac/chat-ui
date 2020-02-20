@@ -55,14 +55,24 @@ sock.on('connection', function connection(client) {
 
     data = JSON.parse(info);
 
+
+    if(data.purpose == "updateIngredients") {
+      request.get(endpoints.env_orch + "/viewTotals", (error, res, body) => {
+        var info = JSON.parse(body);
+        var message = {purpose: "updateIngredients", data: info};
+        sock.broadcast(message);
+
+      });
     // If the start button was clicked
-    if(data.purpose == "newRound") {
+    } if(data.purpose == "newRound") {
 
       // gather all utility data
       var new_round = sampleRound;
       var celia_data, watson_data, human_data;
 
-      var message = {roundTotal: true, newRound: true};
+      var message = {purpose: "roundTotal", roundTotal: true, newRound: true};
+      sock.broadcast(message);
+      var message = {purpose: "updateIngredients", data: "newRound"};
       sock.broadcast(message);
 
       // set duration data
@@ -206,17 +216,17 @@ app.post("/receiveRoundTotals", function(req, res) {
 
   // Grab celias utility
   var celiaUtility = json_content.roundTotals.Celia;
-  var message = {roundTotal: true, newRound: false, id: "Celia", data: celiaUtility};
+  var message = {purpose: "roundTotal", roundTotal: true, newRound: false, id: "Celia", data: celiaUtility};
   sock.broadcast(message);
 
   // Grab watsons utility
   var watsonUtility = json_content.roundTotals.Watson;
-  var message = {roundTotal: true, newRound: false, id: "Watson", data: watsonUtility};
+  var message = {purpose: "roundTotal", roundTotal: true, newRound: false, id: "Watson", data: watsonUtility};
   sock.broadcast(message);
 
   // Grab the human utility
   var humanUtility = json_content.roundTotals.Human;
-  var message = {roundTotal: true, newRound: false, id: "Human", data: humanUtility};
+  var message = {purpose: "roundTotal", newRound: false, id: "Human", data: humanUtility};
   sock.broadcast(message);
 
   // send 'ack'

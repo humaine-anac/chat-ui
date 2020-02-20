@@ -55,6 +55,17 @@ $(document).ready(function(e) {
     });
 
 
+    $(".show_ingredient_display").on("click", function(eve) {
+        if($(".ingredient_display")[0].style.display === "block") {
+            $(".ingredient_display")[0].style.display = "none";
+        } else {
+            var json = {purpose:"updateIngredients"};
+            sock.send(data=JSON.stringify(json));
+            $(".ingredient_display")[0].style.display = "block";
+        }
+    });
+
+
     // debug to check if the browser connects to the server properly
     sock.onopen = function(event) {
         console.log("websocket opened", event);
@@ -73,9 +84,18 @@ $(document).ready(function(e) {
 
         console.log(content);
 
+        if(content.purpose === "updateIngredients") {
+            console.log("entered");
+            $(".ingredient_display")[0].textContent = "Ingredients:\t";
+            if(content.data !== "newRound" && content.data.Human !== undefined) {
+                for(key in content.data.Human.quantity) {
+                    $(".ingredient_display")[0].textContent += "\n\t"
+                    + key + " (" + content.data.Human.quantity[key] + ")";
+                }
+            }
         // if data contains round results
-        if(content.roundTotal == true) {
-
+        } else if(content.purpose == "roundTotal") {
+            console.log("entered");
             // if this is a new round, overwrite old data
             if(content.newRound == true) {
                 written = 0;
@@ -89,7 +109,8 @@ $(document).ready(function(e) {
                 written += 1;
 
                 // display value and unit
-                $("#" + content.id)[0].textContent += content.data.utility.value + " " + content.data.utility.currencyUnit;
+                $("#" + content.id)[0].textContent += content.data.utility.value
+                + " " + content.data.utility.currencyUnit;
 
                 // if human data, show cost, else revenue
                 if(content.id === "Human") {
