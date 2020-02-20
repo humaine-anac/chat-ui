@@ -78,11 +78,40 @@ body {
     color: red;
 }
 
-/* Button used to start a new round*/
+/* Buttons */
 .start {
     height: 5%;
     position: absolute;
+    min-width: 6%;
     left: 1%;
+    bottom: 1%;
+}
+.display_popup {
+    height: 5%;
+    position: absolute;
+    min-width: 6%;
+    left: 1%;
+    bottom: 7%;
+}
+.timer_header {
+    font-size: x-small;
+    left: 8%;
+    bottom: 11%;
+    position: absolute;
+    color: white;
+}
+.timer_1 {
+    max-height: 5%;
+    position: absolute;
+    max-width: 3%;
+    left: 8%;
+    bottom: 6%;
+}
+.timer_2 {
+    max-height: 5%;
+    position: absolute;
+    max-width: 3%;
+    left: 8%;
     bottom: 1%;
 }
 
@@ -92,20 +121,13 @@ body {
     background: lightgrey;
     display: none;
     position: absolute;
-    width: 50%;
     margin: auto;
-    left: 25%;
-    top: 8px;
+    left: 0%;
+    top: 10%;
     border: darkgrey solid 1px;
 }
 .popup-item {
     white-space: pre-wrap;
     overflow-wrap: normal;
     width: 100%;
-}
-.display_popup {
-    height: 5%;
-    position: absolute;
-    left: 1%;
-    bottom: 7%;
 }

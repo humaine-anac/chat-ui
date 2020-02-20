@@ -26,7 +26,8 @@ $(document).ready(function(e) {
                 new_message(message, 'user');
 
                 // send node server the user message
-                sock.send(data=message);
+                var json = {purpose:"message", times:{start:"x", end:"y"}, data:message};
+                sock.send(data=JSON.stringify(json));
                 $($(".user-input-field")[0]).val('');
             }
         }
@@ -34,7 +35,14 @@ $(document).ready(function(e) {
 
     // start round
     $(".start").on("click", function(eve) {
-        sock.send(data="START_NEW_ROUND");
+
+        // get duration data
+        var round = $(".timer_1")[0].value;
+        var post = $(".timer_2")[0].value;
+
+        // send to node server
+        var json = {purpose:"newRound", data:{start:round, end:post}};
+        sock.send(data=JSON.stringify(json));
     });
 
     // if the display_popup button is pressed, show or remove div depending on state

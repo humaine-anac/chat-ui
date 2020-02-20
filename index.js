@@ -51,10 +51,12 @@ sock.on('connection', function connection(client) {
   console.log("CONNECTION OK...");
 
   // if the client sends a message, or if the round button was clicked
-  client.on('message', function incoming(data) {
+  client.on('message', function incoming(info) {
+
+    data = JSON.parse(info);
 
     // If the start button was clicked
-    if(data === "START_NEW_ROUND") {
+    if(data.purpose == "newRound") {
 
       // gather all utility data
       var new_round = sampleRound;
@@ -62,6 +64,10 @@ sock.on('connection', function connection(client) {
 
       var message = {roundTotal: true, newRound: true};
       sock.broadcast(message);
+
+      // set duration data
+      new_round.durations.round = data.data.start;
+      new_round.durations.post = data.data.end;
 
       request.get(endpoints.anac_utility + "/generateUtility/agent", (error, res, body) => {
 
@@ -113,13 +119,13 @@ sock.on('connection', function connection(client) {
       });
     
     // If just a message to the agents, follow here
-    } else {
+    } else if(data.purpose == "message") {
 
       // gather format for new message
       var message = output_json;
 
       // try and set the agents name, if given
-      const lower_transcript = data.toLowerCase();
+      const lower_transcript = data.data.toLowerCase();
       if (lower_transcript.startsWith('watson') || lower_transcript.startsWith('@watson')) {
         message.addressee = 'Watson';
       }
@@ -132,7 +138,7 @@ sock.on('connection', function connection(client) {
 
       // set all other json data
       message.speaker = "Human";
-      message.text = data;
+      message.text = data.data;
       message.timestamp = Date.now();
 
       // HTTP post request to send user message.
@@ -213,6 +219,7 @@ app.post("/receiveRoundTotals", function(req, res) {
   var message = {roundTotal: true, newRound: false, id: "Human", data: humanUtility};
   sock.broadcast(message);
 
+  // send 'ack'
   var json = {Status: 'OK'};
   res.send(json);
 });
