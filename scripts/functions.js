@@ -23,7 +23,7 @@ $(document).ready(function(e) {
             if(message.length > 0) {
 
                 // display message
-                new_message(message, 'user');
+                new_message(message, 'user', 'buyer');
 
                 // send node server the user message
                 var json = {purpose:"message", times:{start:"x", end:"y"}, data:message};
@@ -114,7 +114,8 @@ $(document).ready(function(e) {
         // if data contains message
         } else {
             // display agent message
-            new_message(content.text, content.speaker);
+            console.log(content);
+            new_message(content.text, content.speaker, content.role);
         }
     };
 });
@@ -127,7 +128,7 @@ Input: string - message, string - id.
 Output: none.
 Effects: makes a new div element, 'message-space', containing the senders name and their message.
 */
-function new_message(message, id) {
+function new_message(message, id, role) {
 
     // Don't display if the message is blank
     if(message.length <= 0) {
@@ -143,15 +144,15 @@ function new_message(message, id) {
     // properties since there can only be a user and two agents.
     if(id === 'user') {
         username.className = "user user-name";
-        username.innerHTML = "User";
+        username.innerHTML = role + "/User";
         text.className = "message user";
     } else if(id === a1) {
         username.className = "agent agent-1-name";
-        username.innerHTML = a1;
+        username.innerHTML = role + "/" + a1;
         text.className = "message agent";
     } else if(id === a2) {
         username.className = "agent agent-2-name";
-        username.innerHTML = a2;
+        username.innerHTML = role + "/" + a2;
         text.className = "message agent";
     
     // don't continue if id is not recognized
