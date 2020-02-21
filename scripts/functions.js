@@ -26,7 +26,7 @@ $(document).ready(function(e) {
                 new_message(message, 'user', 'buyer');
 
                 // send node server the user message
-                var json = {purpose:"message", times:{start:"x", end:"y"}, data:message};
+                var json = {purpose:"message", data:message};
                 sock.send(data=JSON.stringify(json));
                 $($(".user-input-field")[0]).val('');
             }
@@ -37,40 +37,52 @@ $(document).ready(function(e) {
     $(".start").on("click", function(eve) {
 
         // get duration data
-        var round = $(".timer_1")[0].value;
-        var post = $(".timer_2")[0].value;
+        var round = $("#timer_2")[0].value;
+        var post = $("#timer_3")[0].value;
+        var warmup = $("#timer_1")[0].value;
 
         // send to node server
-        var json = {purpose:"newRound", data:{start:round, end:post}};
+        var json = {purpose:"newRound", data:{start:round, end:post, pre:warmup}};
         sock.send(data=JSON.stringify(json));
 
+        // set the timer to the given time
         $(".roundTimer")[0].innerHTML = round;
 
-        var timer = setInterval(function() {
-            $(".roundTimer")[0].innerHTML -= 1;
-            if($(".roundTimer")[0].innerHTML <= 0) {
-                console.log("here");
-                clearInterval(timer);
-            }
-        }, 1000);
+        // Wait until the warmup time has ended
+        setTimeout(() => {
+
+            // count down round time
+            var timer = setInterval(function() {
+                $(".roundTimer")[0].innerHTML -= 1;
+
+                // end when it reaches 0
+                if($(".roundTimer")[0].innerHTML <= 0) {
+                    clearInterval(timer);
+                }
+            }, 1000);
+        }, warmup * 1000);
     });
 
     // if the display_popup button is pressed, show or remove div depending on state
     $(".display_popup").on("click", function(eve) {
         if($(".popup")[0].style.display === "block") {
+            $(".display_popup")[0].innerHTML = "Show Resuluts";
             $(".popup")[0].style.display = "none";
         } else {
+            $(".display_popup")[0].innerHTML = "Hide Resuluts";
             $(".popup")[0].style.display = "block";
         }
     });
 
-
+    // if the show_ingredient_display button is pressed, show or remove div depending on state
     $(".show_ingredient_display").on("click", function(eve) {
         if($(".ingredient_display")[0].style.display === "block") {
+            $(".show_ingredient_display")[0].innerHTML = "Show Ingredients";
             $(".ingredient_display")[0].style.display = "none";
         } else {
             var json = {purpose:"updateIngredients"};
             sock.send(data=JSON.stringify(json));
+            $(".show_ingredient_display")[0].innerHTML = "Hide Resuluts";
             $(".ingredient_display")[0].style.display = "block";
         }
     });
@@ -92,10 +104,8 @@ $(document).ready(function(e) {
     sock.onmessage = function(e) {
         var content = JSON.parse(e.data);
 
-        console.log(content);
-
+        // if updateIngredients, then overwrite div with current information
         if(content.purpose === "updateIngredients") {
-            console.log("entered");
             $(".ingredient_display")[0].textContent = "Ingredients:\t";
             if(content.data !== "newRound" && content.data.Human !== undefined) {
                 for(key in content.data.Human.quantity) {
@@ -105,7 +115,6 @@ $(document).ready(function(e) {
             }
         // if data contains round results
         } else if(content.purpose == "roundTotal") {
-            console.log("entered");
             // if this is a new round, overwrite old data
             if(content.newRound == true) {
                 written = 0;
@@ -145,7 +154,6 @@ $(document).ready(function(e) {
         // if data contains message
         } else {
             // display agent message
-            console.log(content);
             new_message(content.text, content.speaker, content.role);
         }
     };

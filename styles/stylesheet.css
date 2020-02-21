@@ -116,16 +116,11 @@ body {
     left: 15px;
 }
 .timer_header {
-    font-size: x-small;
+    font-size: small;
     position: relative;
     color: white;
 }
-.timer_1 {
-    max-height: 5%;
-    position: relative;
-    max-width: 60px;
-}
-.timer_2 {
+.timer {
     max-height: 5%;
     position: relative;
     max-width: 60px;
@@ -146,7 +141,7 @@ body {
 .display_popup {
     height: 5%;
     position: absolute;
-    min-width: 6%;
+    min-width: 8%;
     left: 15px;
     bottom: 7%;
 }
@@ -173,7 +168,7 @@ body {
 .show_ingredient_display {
     height: 5%;
     position: absolute;
-    min-width: 6%;
+    min-width: 10%;
     right: 15px;
     bottom: 1%;
 }

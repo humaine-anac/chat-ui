@@ -55,7 +55,7 @@ sock.on('connection', function connection(client) {
 
     data = JSON.parse(info);
 
-
+    // clause for setting the ingredients display with the most current ingredients
     if(data.purpose == "updateIngredients") {
       request.get(endpoints.env_orch + "/viewTotals", (error, res, body) => {
         var info = JSON.parse(body);
@@ -70,6 +70,7 @@ sock.on('connection', function connection(client) {
       var new_round = sampleRound;
       var celia_data, watson_data, human_data;
 
+      // reset both info displays with null information
       var message = {purpose: "roundTotal", roundTotal: true, newRound: true};
       sock.broadcast(message);
       var message = {purpose: "updateIngredients", data: "newRound"};
@@ -78,6 +79,7 @@ sock.on('connection', function connection(client) {
       // set duration data
       new_round.durations.round = data.data.start;
       new_round.durations.post = data.data.end;
+      new_round.durations.warmup = data.data.pre;
 
       request.get(endpoints.anac_utility + "/generateUtility/seller", (error, res, body) => {
 
