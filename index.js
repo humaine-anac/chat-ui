@@ -79,7 +79,7 @@ sock.on('connection', function connection(client) {
       new_round.durations.round = data.data.start;
       new_round.durations.post = data.data.end;
 
-      request.get(endpoints.anac_utility + "/generateUtility/agent", (error, res, body) => {
+      request.get(endpoints.anac_utility + "/generateUtility/seller", (error, res, body) => {
 
         celia_data = JSON.parse(body);
 
@@ -90,7 +90,7 @@ sock.on('connection', function connection(client) {
         new_round.agents[0].port = endpoints.celia.port;
 
         // Get the agent utility data from the utility generator
-        request.get(endpoints.anac_utility + "/generateUtility/agent", (error, res, body) => {
+        request.get(endpoints.anac_utility + "/generateUtility/seller", (error, res, body) => {
           
           // Parse the string data into a JSON object
           watson_data = JSON.parse(body);
@@ -102,7 +102,7 @@ sock.on('connection', function connection(client) {
           new_round.agents[1].port = endpoints.watson.port;
 
           // Get the human utility data
-          request.get(endpoints.anac_utility + "/generateUtility/human", (error, res, body) => {
+          request.get(endpoints.anac_utility + "/generateUtility/buyer", (error, res, body) => {
             
             // Parse the string data into a JSON object
             human_data = JSON.parse(body);

@@ -43,6 +43,16 @@ $(document).ready(function(e) {
         // send to node server
         var json = {purpose:"newRound", data:{start:round, end:post}};
         sock.send(data=JSON.stringify(json));
+
+        $(".roundTimer")[0].innerHTML = round;
+
+        var timer = setInterval(function() {
+            $(".roundTimer")[0].innerHTML -= 1;
+            if($(".roundTimer")[0].innerHTML <= 0) {
+                console.log("here");
+                clearInterval(timer);
+            }
+        }, 1000);
     });
 
     // if the display_popup button is pressed, show or remove div depending on state
@@ -99,9 +109,9 @@ $(document).ready(function(e) {
             // if this is a new round, overwrite old data
             if(content.newRound == true) {
                 written = 0;
-                $("#Celia")[0].textContent = "Celia: ";
-                $("#Watson")[0].textContent = "Watson: ";
-                $("#Human")[0].textContent = "Human: ";
+                $("#Celia")[0].textContent = "  Celia: ";
+                $("#Watson")[0].textContent = "  Watson: ";
+                $("#Human")[0].textContent = "  Human: ";
                 $(".popup")[0].style.display = "none";
             
             // if not a new round and all data hasn't been displayed
@@ -165,15 +175,15 @@ function new_message(message, id, role) {
     // properties since there can only be a user and two agents.
     if(id === 'user') {
         username.className = "user user-name";
-        username.innerHTML = role + "/User";
+        username.innerHTML = "User";
         text.className = "message user";
     } else if(id === a1) {
         username.className = "agent agent-1-name";
-        username.innerHTML = role + "/" + a1;
+        username.innerHTML = a1;
         text.className = "message agent";
     } else if(id === a2) {
         username.className = "agent agent-2-name";
-        username.innerHTML = role + "/" + a2;
+        username.innerHTML = a2;
         text.className = "message agent";
     
     // don't continue if id is not recognized
