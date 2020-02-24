@@ -80,9 +80,7 @@ $(document).ready(function(e) {
             $(".show_ingredient_display")[0].innerHTML = "Show Ingredients";
             $(".ingredient_display")[0].style.display = "none";
         } else {
-            var json = {purpose:"updateIngredients"};
-            sock.send(data=JSON.stringify(json));
-            $(".show_ingredient_display")[0].innerHTML = "Hide Resuluts";
+            $(".show_ingredient_display")[0].innerHTML = "Hide Ingredients";
             $(".ingredient_display")[0].style.display = "block";
         }
     });
@@ -154,6 +152,8 @@ $(document).ready(function(e) {
         // if data contains message
         } else {
             // display agent message
+            var json = {purpose:"updateIngredients"};
+            sock.send(data=JSON.stringify(json));
             new_message(content.text, content.speaker, content.role);
         }
     };

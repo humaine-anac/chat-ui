@@ -57,11 +57,12 @@ sock.on('connection', function connection(client) {
 
     // clause for setting the ingredients display with the most current ingredients
     if(data.purpose == "updateIngredients") {
+      console.log("update ingre.");
       request.get(endpoints.env_orch + "/viewTotals", (error, res, body) => {
+        console.log("INGREDS", body);
         var info = JSON.parse(body);
         var message = {purpose: "updateIngredients", data: info};
         sock.broadcast(message);
-
       });
     // If the start button was clicked
     } if(data.purpose == "newRound") {
@@ -72,8 +73,6 @@ sock.on('connection', function connection(client) {
 
       // reset both info displays with null information
       var message = {purpose: "roundTotal", roundTotal: true, newRound: true};
-      sock.broadcast(message);
-      var message = {purpose: "updateIngredients", data: "newRound"};
       sock.broadcast(message);
 
       // set duration data
@@ -152,6 +151,8 @@ sock.on('connection', function connection(client) {
       message.speaker = "Human";
       message.text = data.data;
       message.timestamp = Date.now();
+
+      console.log(message);
 
       // HTTP post request to send user message.
       request.post(endpoints.env_orch + endpoints.output, {
