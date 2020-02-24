@@ -146,6 +146,7 @@ $(document).ready(function(e) {
 
                 // display div
                 $("#" + content.id)[0].textContent += "\n ";
+                $(".display_popup")[0].innerHTML = "Hide Resuluts";
                 $(".popup")[0].style.display = "block";
             }
 
