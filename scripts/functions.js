@@ -1,6 +1,5 @@
 // Global Variables
-const a1 = "Celia";
-const a2 = "Watson";
+const colors = {"Celia": "blue", "Watson": "green", "User": "red"};
 var written = 0;
 
 $(document).ready(function(e) {
@@ -17,18 +16,29 @@ $(document).ready(function(e) {
 
             // stop the enter key from writing into the textarea
             event.preventDefault();
-            var message = $($(".user-input-field")[0]).val();
+            var buyer_message = $($(".user-input-field-right")[0]).val();
+            var seller_message = $($(".user-input-field-left")[0]).val();
 
-            // If message is not empty
-            if(message.length > 0) {
+            // If buyer message
+            if(buyer_message.length > 0) {
 
                 // display message
-                new_message(message, 'user', 'buyer');
-
+                new_message(buyer_message, 'User', 'buyer');
                 // send node server the user message
-                var json = {purpose:"message", data:message};
+                var json = {purpose:"message", data:buyer_message, role:"buyer"};
                 sock.send(data=JSON.stringify(json));
-                $($(".user-input-field")[0]).val('');
+                $($(".user-input-field-right")[0]).val('');
+            }
+
+            // if seller message
+            if(seller_message.length > 0) {
+
+                // display message
+                new_message(seller_message, 'User', 'seller');
+                // send node server the user message
+                var json = {purpose:"message", data:seller_message, role:"seller"};
+                sock.send(data=JSON.stringify(json));
+                $($(".user-input-field-left")[0]).val('');
             }
         }
     });
@@ -90,7 +100,6 @@ $(document).ready(function(e) {
     sock.onopen = function(event) {
         console.log("websocket opened", event);
     };
-
 
     // debug to print error object incase of bug
     sock.onerror = function(e) {
@@ -180,24 +189,25 @@ function new_message(message, id, role) {
     var username = document.createElement("div");
     var text = document.createElement("div");
 
-    // depending on the sender, format the message to their specified css. Hardcoded element
-    // properties since there can only be a user and two agents.
-    if(id === 'user') {
-        username.className = "user user-name";
-        username.innerHTML = "User";
-        text.className = "message user";
-    } else if(id === a1) {
-        username.className = "agent agent-1-name";
-        username.innerHTML = a1;
-        text.className = "message agent";
-    } else if(id === a2) {
-        username.className = "agent agent-2-name";
-        username.innerHTML = a2;
-        text.className = "message agent";
+    // if buyer
+    if(role == 'buyer') {
+        username.className = "buyer";
+        username.style.fontSize = "24px";
+        username.innerHTML = role + "-" + id;
+        username.style.color = colors[id];
+        text.className = "message buyer";
     
+    // if seller
+    } else if(role == "seller") {
+        username.className = "seller";
+        username.style.fontSize = "24px";
+        username.innerHTML = role + "-" + id;
+        username.style.color = colors[id];
+        text.className = "message seller";
+    }
     // don't continue if id is not recognized
-    } else {
-        console.log("ERROR: unknown id");
+    else {
+        console.log("ERROR: unknown role");
         return;
     }
 

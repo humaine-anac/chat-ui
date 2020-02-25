@@ -6,6 +6,8 @@ const cors = require('cors');
 const WebSocketServer = require('ws').Server;
 const router = express.Router();
 const path = require('path');
+const {interpretMessage, extractBidFromMessage} = require(path.join(__dirname, '../anac-agent-jok/anac-extract-bid.js'));
+const {classifyMessage} = require(path.join(__dirname, '../anac-agent-jok/anac-conversation.js'));
 
 // JSON files
 const output_json = require('./data/output-gate-json.json');
@@ -57,15 +59,13 @@ sock.on('connection', function connection(client) {
 
     // clause for setting the ingredients display with the most current ingredients
     if(data.purpose == "updateIngredients") {
-      console.log("update ingre.");
       request.get(endpoints.env_orch + "/viewTotals", (error, res, body) => {
-        console.log("INGREDS", body);
         var info = JSON.parse(body);
         var message = {purpose: "updateIngredients", data: info};
         sock.broadcast(message);
       });
     // If the start button was clicked
-    } if(data.purpose == "newRound") {
+    } else if(data.purpose == "newRound") {
 
       // gather all utility data
       var new_round = sampleRound;
@@ -151,6 +151,7 @@ sock.on('connection', function connection(client) {
       message.speaker = "Human";
       message.text = data.data;
       message.timestamp = Date.now();
+      message.role = data.role;
 
       console.log(message);
 
@@ -186,6 +187,7 @@ Output: JSON - {“msgType” = “submitTranscript”,“Status” = “OK”},
 Effects: display agent message to user
 */
 app.post(endpoints.input, function(req, res) {
+  console.log("received message");
   var json_content = req.body;
 
   if(json_content.speaker === "Human") {
@@ -210,9 +212,6 @@ Output: JSON - {“msgType” = “submitTranscript”,“Status” = “OK”},
 Effects: display round results to user
 */
 app.post("/receiveRoundTotals", function(req, res) {
-
-  console.log("received round total");
-  console.log(req.body);
 
   // collect and organize JSON data into separate variables
   var json_content = req.body;
