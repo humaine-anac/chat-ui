@@ -35,5 +35,3 @@ are public and that a record of the contribution (including all
 personal information I submit with it, including my sign-off) is
 maintained indefinitely and may be redistributed consistent with
 this project or the open source license(s) involved.
-
-DCO 1.1 Signed-off-by: Maxfield Herman <hermam3@rpi.edu>

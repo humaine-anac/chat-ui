@@ -76,10 +76,10 @@ sock.on('connection', function connection(client) {
       sock.broadcast(message);
 
       // set duration data
-      new_round.durations.round = data.data.start;
-      new_round.durations.post = data.data.end;
-      new_round.durations.warmup = data.data.pre;
-
+      new_round.durations.round = parseInt(data.data.start);
+      new_round.durations.post = parseInt(data.data.end);
+      new_round.durations.warmUp = parseInt(data.data.pre);
+      console.log(new_round);
       request.get(endpoints.anac_utility + "/generateUtility/seller", (error, res, body) => {
 
         celia_data = JSON.parse(body);

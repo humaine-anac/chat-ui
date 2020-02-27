@@ -10,24 +10,24 @@
     </head>
     <body>
 
-        <div class="buyerTitle">Buyer</div>
-        <div class="sellerTitle">Seller</div>
+        <div id="buyerTitle">Buyer</div>
+        <div id="sellerTitle">Seller</div>
 
-        <div class="roundTimer">0</div>
+        <div id="roundTimer">0</div>
 
         <!--  Chat Display  -->
-        <div class="message-display"></div>
+        <div id="message-display"></div>
 
         <!--  User Input Field  -->
-        <textarea class="user-input-field-left" placeholder="Start chatting as seller!"></textarea>
-        <textarea class="user-input-field-right" placeholder="Start chatting as buyer!"></textarea>
+        <textarea id="user-input-field-left" placeholder="Start chatting as seller!"></textarea>
+        <textarea id="user-input-field-right" placeholder="Start chatting as buyer!"></textarea>
 
         <!--  Button Inputs  -->
-        <button class="start">Start Round</button>
-        <button class="display_popup">Show Results</button>
+        <button id="start">Start Round</button>
+        <button id="display_popup">Show Results</button>
 
         <!-- Timer Data Collection  -->
-        <div class="timer_container">
+        <div id="timer_container">
             <div class="timer_header">Set Round Time:</div>
             <div class="timer_header" style="bottom:14%">Warmup:</div>
             <input class="timer" id="timer_1" value='10'>
@@ -38,15 +38,15 @@
         </div>
 
         <!-- Ingredient Display Info  -->
-        <button class="show_ingredient_display">Show Ingredients</button>
+        <button id="show_ingredient_display">Show Ingredients</button>
     </body>
 
     <!--  Display for round resuluts  -->
-    <div class="popup">
+    <div id="popup">
         <div class="popup-item" id="Celia">  Celia: </div>
         <div class="popup-item" id="Watson">  Watson: </div>
         <div class="popup-item" id="Human">  Human: </div>
     </div>
 
-    <div class="ingredient_display">ingredients:</div>
+    <div id="ingredient_display">ingredients:</div>
 </html>

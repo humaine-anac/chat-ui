@@ -21,8 +21,8 @@
     "type": "git",
     "url": "git+https://us-south.git.cloud.ibm.com/hermam3/agentchat"
   },
-  "author": "",
-  "license": "ISC",
+  "Author": "Max Herman <hermam3@rpi.edu>",
+  "license": "MIT",
   "bugs": {
     "url": "https://us-south.git.cloud.ibm.com/hermam3/agentchat"
   },

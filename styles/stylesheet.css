@@ -15,14 +15,14 @@ body {
 }
 
 /* Title for buyer/seller */
-.buyerTitle {
+#buyerTitle {
     position: absolute;
     top: 25px;
     font-size: 30px;
     color: white;
     right: 22%;
 }
-.sellerTitle {
+#sellerTitle {
     position: absolute;
     top: 25px;
     font-size: 30px;
@@ -31,7 +31,7 @@ body {
 }
 
 /* Timer UI */
-.roundTimer {
+#roundTimer {
     position: absolute;
     top: 50px;
     right: 50px;
@@ -39,7 +39,7 @@ body {
 }
 
 /* Styling group - message space */
-.message-display {
+#message-display {
     background-color: white;
     width: 60%;
     height: 80%;
@@ -67,7 +67,7 @@ body {
 }
 
 /* user text input styling */
-.user-input-field-left {
+#user-input-field-left {
     font-size: 24px;
     background-color: rgb(235, 235, 235);
     width: 29.5%;
@@ -79,7 +79,7 @@ body {
     position: absolute;
     left: 20.5%;
 }
-.user-input-field-right {
+#user-input-field-right {
     font-size: 24px;
     background-color: rgb(235, 235, 235);
     width: 29.5%;
@@ -104,14 +104,14 @@ body {
 }
 
 /* Start Controls */
-.start {
+#start {
     height: 5%;
     position: absolute;
     min-width: 6%;
     left: 15px;
     bottom: 1%;
 }
-.timer_container {
+#timer_container {
     position: absolute;
     max-width: 8%;
     bottom: 15%;
@@ -129,7 +129,7 @@ body {
 }
 
 /* Popup window styles */
-.popup {
+#popup {
     z-index: 2;
     max-width: 600px;
     background: lightgrey;
@@ -140,7 +140,7 @@ body {
     top: 10%;
     border: darkgrey solid 1px;
 }
-.display_popup {
+#display_popup {
     height: 5%;
     position: absolute;
     min-width: 8%;
@@ -154,7 +154,7 @@ body {
 }
 
 /* Ingredient Display */
-.ingredient_display {
+#ingredient_display {
     z-index: 2;
     white-space: pre-wrap;
     overflow-wrap: normal;
@@ -167,7 +167,7 @@ body {
     top: 10%;
     border: darkgrey solid 1px;
 }
-.show_ingredient_display {
+#show_ingredient_display {
     height: 5%;
     position: absolute;
     min-width: 10%;

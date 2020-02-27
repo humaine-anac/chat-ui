@@ -1,6 +1,6 @@
 // Global Variables
 const colors = {"Celia": "blue", "Watson": "green", "User": "red"};
-var written = 0;
+var quantities_set = 0;
 
 $(document).ready(function(e) {
     
@@ -16,8 +16,8 @@ $(document).ready(function(e) {
 
             // stop the enter key from writing into the textarea
             event.preventDefault();
-            var buyer_message = $($(".user-input-field-right")[0]).val();
-            var seller_message = $($(".user-input-field-left")[0]).val();
+            var buyer_message = $("#user-input-field-right").val();
+            var seller_message = $("#user-input-field-left").val();
 
             // If buyer message
             if(buyer_message.length > 0) {
@@ -27,7 +27,7 @@ $(document).ready(function(e) {
                 // send node server the user message
                 var json = {purpose:"message", data:buyer_message, role:"buyer"};
                 sock.send(data=JSON.stringify(json));
-                $($(".user-input-field-right")[0]).val('');
+                $("#user-input-field-right").val('');
             }
 
             // if seller message
@@ -38,14 +38,13 @@ $(document).ready(function(e) {
                 // send node server the user message
                 var json = {purpose:"message", data:seller_message, role:"seller"};
                 sock.send(data=JSON.stringify(json));
-                $($(".user-input-field-left")[0]).val('');
+                $("#user-input-field-left").val('');
             }
         }
     });
 
     // start round
-    $(".start").on("click", function(eve) {
-
+    $("#start").on("click", function(eve) {
         // get duration data
         var round = $("#timer_2")[0].value;
         var post = $("#timer_3")[0].value;
@@ -56,17 +55,17 @@ $(document).ready(function(e) {
         sock.send(data=JSON.stringify(json));
 
         // set the timer to the given time
-        $(".roundTimer")[0].innerHTML = round;
+        $("#roundTimer")[0].innerHTML = round;
 
         // Wait until the warmup time has ended
         setTimeout(() => {
 
             // count down round time
             var timer = setInterval(function() {
-                $(".roundTimer")[0].innerHTML -= 1;
+                $("#roundTimer")[0].innerHTML -= 1;
 
                 // end when it reaches 0
-                if($(".roundTimer")[0].innerHTML <= 0) {
+                if($("#roundTimer")[0].innerHTML <= 0) {
                     clearInterval(timer);
                 }
             }, 1000);
@@ -74,24 +73,24 @@ $(document).ready(function(e) {
     });
 
     // if the display_popup button is pressed, show or remove div depending on state
-    $(".display_popup").on("click", function(eve) {
-        if($(".popup")[0].style.display === "block") {
-            $(".display_popup")[0].innerHTML = "Show Resuluts";
-            $(".popup")[0].style.display = "none";
+    $("#display_popup").on("click", function(eve) {
+        if($("#popup")[0].style.display === "block") {
+            $("#display_popup")[0].innerHTML = "Show Results";
+            $("#popup")[0].style.display = "none";
         } else {
-            $(".display_popup")[0].innerHTML = "Hide Resuluts";
-            $(".popup")[0].style.display = "block";
+            $("#display_popup")[0].innerHTML = "Hide Results";
+            $("#popup")[0].style.display = "block";
         }
     });
 
     // if the show_ingredient_display button is pressed, show or remove div depending on state
-    $(".show_ingredient_display").on("click", function(eve) {
-        if($(".ingredient_display")[0].style.display === "block") {
-            $(".show_ingredient_display")[0].innerHTML = "Show Ingredients";
-            $(".ingredient_display")[0].style.display = "none";
+    $("#show_ingredient_display").on("click", function(eve) {
+        if($("#ingredient_display")[0].style.display === "block") {
+            $("#show_ingredient_display")[0].innerHTML = "Show Ingredients";
+            $("#ingredient_display")[0].style.display = "none";
         } else {
-            $(".show_ingredient_display")[0].innerHTML = "Hide Ingredients";
-            $(".ingredient_display")[0].style.display = "block";
+            $("#show_ingredient_display")[0].innerHTML = "Hide Ingredients";
+            $("#ingredient_display")[0].style.display = "block";
         }
     });
 
@@ -113,10 +112,10 @@ $(document).ready(function(e) {
 
         // if updateIngredients, then overwrite div with current information
         if(content.purpose === "updateIngredients") {
-            $(".ingredient_display")[0].textContent = "Ingredients:\t";
+            $("#ingredient_display")[0].textContent = "Ingredients:\t";
             if(content.data !== "newRound" && content.data.Human !== undefined) {
                 for(key in content.data.Human.quantity) {
-                    $(".ingredient_display")[0].textContent += "\n\t"
+                    $("#ingredient_display")[0].textContent += "\n\t"
                     + key + " (" + content.data.Human.quantity[key] + ")";
                 }
             }
@@ -124,15 +123,15 @@ $(document).ready(function(e) {
         } else if(content.purpose == "roundTotal") {
             // if this is a new round, overwrite old data
             if(content.newRound == true) {
-                written = 0;
+                quantities_set = 0;
                 $("#Celia")[0].textContent = "  Celia: ";
                 $("#Watson")[0].textContent = "  Watson: ";
                 $("#Human")[0].textContent = "  Human: ";
-                $(".popup")[0].style.display = "none";
+                $("#popup")[0].style.display = "none";
             
             // if not a new round and all data hasn't been displayed
-            } else if(written < 3 && content.data !== undefined){
-                written += 1;
+            } else if(quantities_set < 3 && content.data !== undefined){
+                quantities_set += 1;
 
                 // display value and unit
                 $("#" + content.id)[0].textContent += content.data.utility.value
@@ -155,8 +154,8 @@ $(document).ready(function(e) {
 
                 // display div
                 $("#" + content.id)[0].textContent += "\n ";
-                $(".display_popup")[0].innerHTML = "Hide Resuluts";
-                $(".popup")[0].style.display = "block";
+                $("#display_popup")[0].innerHTML = "Hide Results";
+                $("#popup")[0].style.display = "block";
             }
 
         // if data contains message
@@ -193,7 +192,7 @@ function new_message(message, id, role) {
     if(role == 'buyer') {
         username.className = "buyer";
         username.style.fontSize = "24px";
-        username.innerHTML = role + "-" + id;
+        username.innerHTML = id;
         username.style.color = colors[id];
         text.className = "message buyer";
     
@@ -201,7 +200,7 @@ function new_message(message, id, role) {
     } else if(role == "seller") {
         username.className = "seller";
         username.style.fontSize = "24px";
-        username.innerHTML = role + "-" + id;
+        username.innerHTML = id;
         username.style.color = colors[id];
         text.className = "message seller";
     }
@@ -220,8 +219,8 @@ function new_message(message, id, role) {
     message_space.appendChild(text);
 
     // Add the container div to the display div
-    document.getElementsByClassName("message-display")[0].appendChild(message_space);
+    $("#message-display")[0].appendChild(message_space);
 
     // scroll down to show the most recent messages.
-    $(".message-display").scrollTop($(".message-display")[0].scrollHeight);
+    $("#message-display").scrollTop($("#message-display")[0].scrollHeight);
 }
