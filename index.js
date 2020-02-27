@@ -6,8 +6,8 @@ const cors = require('cors');
 const WebSocketServer = require('ws').Server;
 const router = express.Router();
 const path = require('path');
-const {interpretMessage, extractBidFromMessage} = require(path.join(__dirname, '../anac-agent-jok/anac-extract-bid.js'));
-const {classifyMessage} = require(path.join(__dirname, '../anac-agent-jok/anac-conversation.js'));
+const {interpretMessage, extractBidFromMessage} = require(path.join(__dirname, '/anac-extract-bid.js'));
+const {classifyMessage} = require(path.join(__dirname, '/anac-conversation.js'));
 
 // JSON files
 const output_json = require('./data/output-gate-json.json');
