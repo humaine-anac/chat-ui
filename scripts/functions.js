@@ -54,22 +54,41 @@ $(document).ready(function(e) {
         var json = {purpose:"newRound", data:{start:round, end:post, pre:warmup}};
         sock.send(data=JSON.stringify(json));
 
-        // set the timer to the given time
-        $("#roundTimer")[0].innerHTML = round;
+        // WARMUP TIMER
+        $("#roundTimerHeader")[0].innerHTML = "Warmup Time:";
+        $("#roundTimer")[0].innerHTML = warmup;
+        var timer1 = setInterval(function(){
+            $("#roundTimer")[0].innerHTML -= 1;
 
-        // Wait until the warmup time has ended
-        setTimeout(() => {
+            if($("#roundTimer")[0].innerHTML <= 0) {
+                clearInterval(timer1);
 
-            // count down round time
-            var timer = setInterval(function() {
-                $("#roundTimer")[0].innerHTML -= 1;
+                // ROUND TIMER
+                $("#roundTimerHeader")[0].innerHTML = "Negotiation Time:";
+                $("#roundTimer")[0].innerHTML = round;
+                var timer2 = setInterval(function() {
+                    $("#roundTimer")[0].innerHTML -= 1;
+        
+                    if($("#roundTimer")[0].innerHTML <= 0) {
+                        clearInterval(timer2);
 
-                // end when it reaches 0
-                if($("#roundTimer")[0].innerHTML <= 0) {
-                    clearInterval(timer);
-                }
-            }, 1000);
-        }, warmup * 1000);
+
+                        // ALLOCATION TIMER
+                        $("#roundTimerHeader")[0].innerHTML = "Allocation Time:";
+                        $("#roundTimer")[0].innerHTML = post;
+                        var timer3 = setInterval(function() {
+                            $("#roundTimer")[0].innerHTML -= 1;
+
+                            if($("#roundTimer")[0].innerHTML <= 0) {
+                                $("#roundTimerHeader")[0].innerHTML = "Post-game:";
+                                clearInterval(timer3);
+                            }
+                        }, 1000);
+
+                    }
+                }, 1000);
+            }
+        }, 1000);
     });
 
     // if the display_popup button is pressed, show or remove div depending on state
@@ -128,20 +147,23 @@ $(document).ready(function(e) {
                 $("#Watson")[0].textContent = "  Watson: ";
                 $("#Human")[0].textContent = "  Human: ";
                 $("#popup")[0].style.display = "none";
+                //$("#roundTimerHeader")[0].innerHTML = "Pre-Game:";
             
             // if not a new round and all data hasn't been displayed
             } else if(quantities_set < 3 && content.data !== undefined){
                 quantities_set += 1;
 
                 // display value and unit
-                $("#" + content.id)[0].textContent += content.data.utility.value
+                $("#" + content.id)[0].textContent += "\n\tProfit: " + content.data.utility.value
                 + " " + content.data.utility.currencyUnit;
 
                 // if human data, show cost, else revenue
                 if(content.id === "Human") {
-                    $("#" + content.id)[0].textContent += "\n\tCost: " + content.data.cost;
+                    $("#" + content.id)[0].textContent += "\n\tCost: "
+                    + content.data.cost + " " + content.data.utility.currencyUnit;
                 } else {
-                    $("#" + content.id)[0].textContent += "\n\tRevenue: " + content.data.revenue;
+                    $("#" + content.id)[0].textContent += "\n\tRevenue: "
+                    + content.data.revenue + " " + content.data.utility.currencyUnit;
                 }
 
                 $("#" + content.id)[0].textContent += "\n\tQuantity:";
