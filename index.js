@@ -80,7 +80,7 @@ sock.on('connection', function connection(client) {
       new_round.durations.post = parseInt(data.data.end);
       new_round.durations.warmUp = parseInt(data.data.pre);
       console.log(new_round);
-      request.get(endpoints.anac_utility + "/generateUtility/seller", (error, res, body) => {
+      request.get(endpoints.utility_generator + "/generateUtility/seller", (error, res, body) => {
 
         celia_data = JSON.parse(body);
 
@@ -91,8 +91,8 @@ sock.on('connection', function connection(client) {
         new_round.agents[0].port = endpoints.celia.port;
 
         // Get the agent utility data from the utility generator
-        request.get(endpoints.anac_utility + "/generateUtility/seller", (error, res, body) => {
-          
+        request.get(endpoints.utility_generator + "/generateUtility/seller", (error, res, body) => {
+
           // Parse the string data into a JSON object
           watson_data = JSON.parse(body);
 
@@ -103,8 +103,8 @@ sock.on('connection', function connection(client) {
           new_round.agents[1].port = endpoints.watson.port;
 
           // Get the human utility data
-          request.get(endpoints.anac_utility + "/generateUtility/buyer", (error, res, body) => {
-            
+          request.get(endpoints.utility_generator + "/generateUtility/buyer", (error, res, body) => {
+
             // Parse the string data into a JSON object
             human_data = JSON.parse(body);
 
@@ -116,7 +116,7 @@ sock.on('connection', function connection(client) {
 
               // formatted JSON object
               json: new_round
-            
+
             // Error handler for POST request
             }, (error, res) => {
               if (error) {
@@ -128,7 +128,7 @@ sock.on('connection', function connection(client) {
           });
         });
       });
-    
+
     // If just a message to the agents, follow here
     } else if(data.purpose == "message") {
 
@@ -160,7 +160,7 @@ sock.on('connection', function connection(client) {
 
         // formatted JSON object
         json: message
-      
+
       // Error handler for POST request
       }, (error, res) => {
         if (error) {
@@ -198,7 +198,7 @@ app.post(endpoints.input, function(req, res) {
 
   // Send to broadcast method for displaying in UI
   sock.broadcast(json_content);
-  
+
   // send 'ack'
   var json = {msgType: 'submitTranscript', Status: 'OK'};
   res.send(json);
@@ -264,12 +264,12 @@ dummyRoute.post(endpoints.output, function(req, res) {
   var json_content = req.body;
 
   // message from user to agents
-  if(json_content.speaker === "Human") {
+  if (json_content.speaker === "Human") {
     request.post(endpoints.agent_message + endpoints.input, {
 
       // formatted JSON object
       json: json_content
-    
+
     // Error handler for POST request
     }, (error, res) => {
       if (error) {
@@ -285,7 +285,7 @@ dummyRoute.post(endpoints.output, function(req, res) {
 
       // formatted JSON object
       json: json_content
-    
+
     // Error handler for POST request
     }, (error, res) => {
       if (error) {
