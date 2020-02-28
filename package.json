@@ -1,5 +1,5 @@
 {
-  "name": "chatbot_gui",
+  "name": "chat-ui",
   "version": "1.0.0",
   "dependencies": {
     "@cisl/logger": "^1.2.1",
@@ -18,16 +18,17 @@
   "description": "Chat menu used to talk with agents",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://us-south.git.cloud.ibm.com/hermam3/agentchat"
+    "url": "git+https://github.com/humaine-anac/chat-ui"
   },
   "Author": "Max Herman <leawoodmax@yahoo.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://us-south.git.cloud.ibm.com/hermam3/agentchat"
+    "url": "https://github.com/humaine-anac/chat-ui/issues"
   },
-  "homepage": "https://us-south.git.cloud.ibm.com/hermam3/agentchat#readme"
+  "homepage": "https://github.com/humaine-anac/chat-ui#readme"
 }
