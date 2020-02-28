@@ -10,6 +10,8 @@
 
 How to start chatUI:
 - run npm install to ensure dependencies are installed
+- cp assistantParams.json.template assistantParams.json
+- Optionally, edit assistantParams.json to contain a valid Watson Assistant api key, url, and assistant id. This should be the same file as used in the repository agent-jok.
 - start the nodeJS server, index.js
     - node index.js
 - open the index.html (http://localhost:2500) page in a browser and refresh
