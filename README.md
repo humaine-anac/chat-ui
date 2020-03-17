@@ -1,3 +1,10 @@
+
+# Chat-UI
+
+This web application provides an interface for interacting with the agents through natural language.
+Each round is a dialogue and, before chatting, the user needs to first specify the time in seconds for the warm up period (which is the time that the human buyer has to decide on a negotiation strategy), for the round (which is the time duration of the entire dialogue) and for the post-round (which is the time the human buyer has to evaluate the goods in the Human Assistant UI tool.
+For more details, please see the documentation in https://github.com/humaine-anac/technical-documentation.
+
 ## Details
 
 1. This will be shipped to participants
@@ -14,8 +21,10 @@ How to start chatUI:
 - Optionally, edit assistantParams.json to contain a valid Watson Assistant api key, url, and assistant id. This should be the same file as used in the repository agent-jok.
 - start the nodeJS server, index.js
     - node index.js
-- open the index.html (http://localhost:2500) page in a browser and refresh
-    - the node server should indicate a connection was made
+- open the Chat UI index.html (http://localhost:2500) page in a browser and refresh
+    - open the Human Assistant UI web page in a browser
+    - go to the Chat UI web page and start the round
+    - the Chat UI node server should indicate a connection was made and the round was created and the statusCode should be 200
 - endpoints can be edited in the ~/data/endpoints.json file
 
 ## Contributing
