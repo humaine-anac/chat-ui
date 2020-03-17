@@ -7,12 +7,10 @@
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
-    "ibm-watson": "*",
     "jquery": "^3.4.1",
     "logger": "0.0.1",
     "request": "^2.88.2",
     "uuid": "^3.4.0",
-    "websocket": "^1.0.31",
     "ws": "^7.2.1"
   },
   "description": "Chat menu used to talk with agents",
