@@ -17,7 +17,6 @@ $(document).ready(function(e) {
             // stop the enter key from writing into the textarea
             event.preventDefault();
             var buyer_message = $("#user-input-field-right").val();
-            var seller_message = $("#user-input-field-left").val();
 
             // If buyer message
             if(buyer_message.length > 0) {
@@ -28,17 +27,6 @@ $(document).ready(function(e) {
                 var json = {purpose:"message", data:buyer_message, role:"buyer"};
                 sock.send(data=JSON.stringify(json));
                 $("#user-input-field-right").val('');
-            }
-
-            // if seller message
-            if(seller_message.length > 0) {
-
-                // display message
-                new_message(seller_message, 'User', 'seller');
-                // send node server the user message
-                var json = {purpose:"message", data:seller_message, role:"seller"};
-                sock.send(data=JSON.stringify(json));
-                $("#user-input-field-left").val('');
             }
         }
     });

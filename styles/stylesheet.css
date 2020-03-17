@@ -73,29 +73,17 @@ body {
 }
 
 /* user text input styling */
-#user-input-field-left {
-    font-size: 24px;
-    background-color: rgb(235, 235, 235);
-    width: 29.5%;
-    max-height: 10%;
-    bottom: 0px;
-    text-decoration: none;
-    outline: none;
-    resize: none;
-    position: absolute;
-    left: 20.5%;
-}
 #user-input-field-right {
     font-size: 24px;
     background-color: rgb(235, 235, 235);
-    width: 29.5%;
+    width: 59.5%;
     max-height: 10%;
     bottom: 0px;
     text-decoration: none;
     outline: none;
     resize: none;
     position: absolute;
-    right: 19%;
+    right: 19.5%;
 }
 
 /* Hardcoded buyer/seller message styling */
