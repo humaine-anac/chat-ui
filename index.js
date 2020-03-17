@@ -236,18 +236,11 @@ app.post("/receiveRoundTotals", function(req, res) {
 
 
 // Dummy endpoints for E.O.
-app.post('/receiveRejection', function(req, res) {
-  var json = {status: 'Acknowledged'};
-  res.send(json);
-});
-app.post('/startRound', function(req, res) {
-  var json = {status: 'Acknowledged'};
-  res.send(json);
-});
-app.post('/endRound', function(req, res) {
-  var json = {status: 'Acknowledged'};
-  res.send(json);
-});
+app.post('/receiveRejection', (_, res) => res.json({status: 'Acknowledged'}));
+app.post('/startRound', (_, res) => res.json({status: 'Acknowledged'}));
+app.post('/endRound', (_, res) => res.json({status: 'Acknowledged'}));
+app.post('/setUtility', (_, res) => res.json({status: 'Acknowledged'}));
+app.post('/sendRoundMetadata', (_, res) => res.json({status: 'Acknowledged'}));
 
 
 // Psuedo routing api for communication between user and agents
