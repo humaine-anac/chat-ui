@@ -1,6 +1,8 @@
 
 # Chat-UI
 
+__ARCHIVED__: See [competition-ui](https://github.com/humaine-anac/competition-ui) for the currently used repo for UI development.
+
 This web application provides an interface for interacting with the agents through natural language.
 Each round is a dialogue and, before chatting, the user needs to first specify the time in seconds for the warm up period (which is the time that the human buyer has to decide on a negotiation strategy), for the round (which is the time duration of the entire dialogue) and for the post-round (which is the time the human buyer has to evaluate the goods in the Human Assistant UI tool.
 For more details, please see the documentation in https://github.com/humaine-anac/technical-documentation.
